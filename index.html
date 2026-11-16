@@ -3,6 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-G9YwyeR0aZZrR4O6ZeKMgEzmLs+/d2wOOSY9B0nOhfA='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; manifest-src 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="theme-color" content="#0f4c81">
+<meta name="description" content="מעבדת תלת־ממד – המעבדה של פרופ׳ אמיר שפירא, אוניברסיטת בן־גוריון בנגב: הדפסה בתלת־ממד, סריקה וחיתוך לייזר.">
+<meta name="format-detection" content="telephone=no">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%230f4c81%22/%3E%3Cpath d=%22M32 12l18 10v20L32 52 14 42V22z%22 fill=%22none%22 stroke=%22%23fff%22 stroke-width=%224%22 stroke-linejoin=%22round%22/%3E%3C/svg%3E">
 <title>מעבדת תלת־ממד</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,7 +48,7 @@ button.top::after{content:"";width:7px;height:7px;border-left:2px solid currentC
 @media (max-width:1240px){.top small{display:none}}
 @media (max-width:900px){
  header{position:static}
- .hb{flex-wrap:wrap;gap:6px;padding:10px 0}
+ .hb{flex-wrap:wrap;gap:6px;padding-top:10px;padding-bottom:10px}
  nav{width:100%}
  .nav{position:relative;gap:6px}
  .it{position:static}
@@ -54,6 +60,7 @@ button.top::after{content:"";width:7px;height:7px;border-left:2px solid currentC
 .q{margin:0 0 14px}.q b{display:block;margin-bottom:6px}.q .chips{margin:0}
 .qr{background:#fff;border-radius:12px;padding:14px 16px;margin:10px 0}.qr h3{margin:0!important;color:var(--c,var(--ac))}.qr p{margin:.2em 0 .4em;color:var(--mut);font-size:.97rem}
 .qv{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.88rem;color:var(--mut)}.qv b{color:var(--tx)}
+
 /* content */
 main{min-height:60vh}
 section{padding:72px 0}
@@ -93,7 +100,7 @@ h3{font-size:1.15rem;margin:0 0 .25em;font-weight:700}
 .tag{display:inline-block;font-size:.8rem;font-weight:700;color:var(--c,var(--ac));background:color-mix(in srgb,var(--c,var(--ac)) 12%,#fff);border-radius:99px;padding:1px 10px;margin-inline-start:6px;vertical-align:middle}
 .band{background:linear-gradient(120deg,var(--ac) 0%,#1864ab 55%,var(--sls) 100%);color:#fff;border-radius:20px;padding:44px 36px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between}
 .band h2{margin:0}.band p{margin:.3em 0 0;opacity:.9}.band .btn{background:#fff;color:var(--ac);border-color:#fff}
-.page{padding:56px 0 80px}
+.page{padding-top:56px;padding-bottom:80px}
 .crumb{font-size:.9rem;color:var(--mut);margin-bottom:6px}.crumb a{text-decoration:none}
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:40px}@media(max-width:760px){.cols{grid-template-columns:1fr}}
 .good li,.less li{margin:.35em 0;padding-inline-start:4px}
@@ -179,6 +186,50 @@ footer{border-top:1px solid var(--ln);padding:36px 0;color:var(--mut);font-size:
 .js .rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}.js .rv.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.js .rv{opacity:1;transform:none;transition:none}.dr{animation:none;stroke-dashoffset:0}*{transition:none!important}}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+td.nw{white-space:nowrap}
+.scrim{position:fixed;inset:0;background:rgba(17,24,39,.35);z-index:39;opacity:0;visibility:hidden;transition:.2s}
+.mbar{display:none}
+@media (max-width:640px){
+ body{font-size:17px}
+ header{position:sticky;top:0;backdrop-filter:none;background:#fff}
+ .hb{padding-top:8px;padding-bottom:0;min-height:0;gap:2px}
+ .logo b{font-size:1.05rem}
+ nav{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:0 -20px;padding:0 20px}
+ nav::-webkit-scrollbar{display:none}
+ .nav{flex-wrap:nowrap;padding:6px 0 10px}
+ .top{white-space:nowrap;min-height:40px}
+ .dd{position:fixed;left:0;right:0;top:auto;bottom:0;z-index:60;border-radius:20px 20px 0 0;max-height:78vh;overflow:auto;padding:10px 16px calc(18px + env(safe-area-inset-bottom));transform:translateY(105%);opacity:1;visibility:hidden;transition:transform .25s ease,visibility .25s}
+ .dd::before{content:"";display:block;width:44px;height:5px;border-radius:3px;background:#d0d5db;margin:2px auto 10px}
+ .it.open>.dd{transform:none;visibility:visible}
+ .it:focus-within:not(.open)>.dd{transform:translateY(105%);visibility:hidden}
+ .dd a{padding:14px 12px;font-size:1.05rem;border-bottom:1px solid var(--ln);border-radius:0}
+ .sub a{padding-inline-start:28px;font-size:1rem}
+ body.sheet{overflow:hidden}body.sheet .scrim{opacity:1;visibility:visible}
+ section{padding:44px 0}.hero{padding:32px 0 20px}.hero-grid{gap:16px}.hero-art{max-width:190px;margin:0 auto}
+ .page{padding-top:28px;padding-bottom:56px}.gs{padding:40px 0}.stu-hero{padding:32px 0 24px}
+ .sec-h{margin-bottom:22px}.band{padding:26px 20px;border-radius:16px}
+ .lead{font-size:1.08rem}
+ .prn{gap:12px;padding:20px 0}.prn .pa{max-width:150px}
+ .tc-art{max-width:220px!important;margin:0 auto}
+ .btns .btn{flex:1 1 100%;justify-content:center}
+ .svc a{gap:12px;padding:16px 2px}
+ .mats{gap:12px}.mat{padding:18px}
+ table.ft thead,table.rules thead{display:none}
+ table.ft,table.ft tbody,table.rules,table.rules tbody{display:block}
+ table.ft tr,table.rules tr{display:block;border-bottom:1px solid var(--ln);padding:12px 0}
+ table.ft th,table.rules td:first-child{display:block;border:0;padding:0 0 6px;font-weight:700}
+ table.ft td,table.rules td{display:flex;justify-content:space-between;align-items:baseline;gap:14px;border:0;padding:3px 0;white-space:normal}
+ table.ft td::before,table.rules td[data-l]::before{content:attr(data-l);color:var(--mut);font-size:.85rem;flex:none}
+ table.rules td[data-l="הערות"]{display:block;color:var(--mut);font-size:.95rem}
+ table.rules td[data-l="הערות"]::before{display:none}
+ .ebar{display:none}
+ .mbar{display:flex;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:44;gap:8px}
+ .mbar a{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px;border-radius:14px;background:var(--ac);color:#fff;text-decoration:none;font-weight:700;box-shadow:0 8px 24px rgba(15,76,129,.35)}
+ .mbar a.alt{background:#fff;color:var(--ac);border:2px solid var(--ac);box-shadow:0 8px 24px rgba(17,24,39,.12)}
+ body{padding-bottom:84px}
+ body.sheet .mbar{display:none}
+}
 </style>
 </head>
 <body>
@@ -188,13 +239,17 @@ footer{border-top:1px solid var(--ln);padding:36px 0;color:var(--mut);font-size:
   <nav id="nv" aria-label="ניווט ראשי"><ul class="nav" id="nav"></ul></nav>
 </div></header>
 <main id="m" tabindex="-1"></main>
+<div class="scrim" id="scrim" aria-hidden="true"></div>
+<div class="mbar" aria-label="פעולות מהירות"><a data-mail href="#contact">✉ מייל למעבדה</a><a class="alt" href="#students">סטודנטים</a></div>
 <footer><div class="wrap fg">
  <div><b style="color:var(--tx)">מעבדת תלת־ממד – המעבדה של פרופ׳ אמיר שפירא</b><br>בניין 57, מעבדה 2 · אוניברסיטת בן־גוריון בנגב, באר שבע</div>
- <div><a href="mailto:bgu.amc@gmail.com">bgu.amc@gmail.com</a><br><a href="#contact">ליצירת קשר</a></div>
+ <div><a data-mail href="#contact">מייל המעבדה</a><br><a href="#contact">ליצירת קשר</a></div>
 </div></footer>
 <script>
 document.documentElement.classList.add('js');
-const EMAIL='bgu.amc@gmail.com';
+const EMAIL=['bgu.amc','gmail.com'].join('@');
+try{if(window.top!==window.self)window.top.location=window.self.location}catch(_){document.documentElement.style.display='none'}
+document.querySelectorAll('[data-mail]').forEach(a=>{a.href='mailto:'+EMAIL;if(a.closest('footer'))a.textContent=EMAIL});
 /* ---------- icons ---------- */
 const I=d=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
 const IC={
@@ -396,7 +451,7 @@ function fullTable(host){
  function draw(){let R=FT.filter(r=>st.g==='הכל'||r[0]===st.g);
   if(st.k)R=[...R].sort((a,b)=>{const x=val(a,st.k),y=val(b,st.k);if(x==null&&y==null)return 0;if(x==null)return 1;if(y==null)return -1;return (typeof x==='string'?x.localeCompare(y):x-y)*st.d});
   host.querySelectorAll('th').forEach(th=>{th.dataset.k===st.k?th.setAttribute('aria-sort',st.d>0?'ascending':'descending'):th.removeAttribute('aria-sort')});
-  host.querySelector('tbody').innerHTML=R.map(r=>`<tr><th><span class="grp" style="background:${GRP[r[0]]}">${r[0]}</span><br>${r[1]}${r[7]?`<br><small style="font-weight:400;color:var(--mut)">${r[7]}</small>`:''}</th><td class="n">${f(r[2])}${r[2]?`<span class="ebar" style="width:${Math.round(Math.log10(r[2])/Math.log10(12000)*60)}px;background:${GRP[r[0]]}"></span>`:''}</td><td class="n">${f(r[3])}</td><td class="n">${f(r[4])}</td><td class="n">${f(r[5])}</td><td>${r[6]}</td></tr>`).join('');}
+  host.querySelector('tbody').innerHTML=R.map(r=>`<tr><th><span class="grp" style="background:${GRP[r[0]]}">${r[0]}</span><br>${r[1]}${r[7]?`<br><small style="font-weight:400;color:var(--mut)">${r[7]}</small>`:''}</th><td class="n" data-l="מודול יאנג (MPa)">${f(r[2])}${r[2]?`<span class="ebar" style="width:${Math.round(Math.log10(r[2])/Math.log10(12000)*60)}px;background:${GRP[r[0]]}"></span>`:''}</td><td class="n" data-l="חוזק מתיחה (MPa)">${f(r[3])}</td><td class="n" data-l="Tg (°C)">${f(r[4])}</td><td class="n" data-l="HDT (°C)">${f(r[5])}</td><td data-l="מדפסות">${r[6]}</td></tr>`).join('');}
  draw();
 }
 /* ---------- diagrams for students ---------- */
@@ -588,7 +643,7 @@ ${SEC('s-sup',5,'fdm','תמיכות, overhangs וזיזים',`<div class="rv"><p
 <h3 class="rv">זיז שיוצא מעמוד: פאזה של 45°</h3><p class="rv">זיז אופקי שיוצא מעמוד מתחיל באוויר, ולכן צריך תמיכה מתחתיו. <b>אם התכן מאפשר, אפשר להוסיף מתחת לזיז פאזה של 45°.</b> אם מוסיפים פאזה – היא צריכה להיות <b>לאורך כל הזיז, עד הקצה שלו</b>. כך כל שכבה נבנית מעט הלאה מהקודמת, והזיז מודפס בלי תמיכה בכלל. בונוס: הפאזה גם מחזקת את השורש של הזיז.</p>
 <div class="fig rv"><figure>${DG.tab}<figcaption><b>זיז מעמוד.</b> מימין: בלי פאזה – צריך תמיכה מלאה. משמאל: פאזה של 45° לאורך כל הזיז – אין צורך בתמיכה.</figcaption></figure><figure>${DG.edge}<figcaption><b>קצוות תחתונים.</b> רדיוס בתחתית החלק מתחיל כמעט אופקי, ולכן הוא overhang. פאזה של 45° מודפסת נקי. רדיוסים בקצוות העליונים והאנכיים – בלי בעיה.</figcaption></figure></div>
 <div class="cols rv"><div><h3>חורים אופקיים</h3><p>רק בחורים קטנים מאוד (עד כ־2 מ״מ) כדאי לשקול צורת „טיפה” – חור עם קצה עליון מחודד ב־45°. בחורים גדולים יותר אין צורך.</p></div><div><h3>כשאין ברירה – תמיכה</h3><p>ב־H2C אפשר להדפיס את שכבת המגע של התמיכה מחומר אחר, שנפרד בקלות ומשאיר משטח נקי יחסית.</p></div></div>`)}
-${SEC('s-rules',6,'grn','כללי תכנון – טבלת עזר',`<p class="rv">ערכים טיפוסיים במדפסת תלת־ממד רגילה. בהתאמה קריטית – כדאי להדפיס קודם חלק בדיקה קטן.</p><div class="sc rv"><table class="rules"><thead><tr><th>נושא</th><th>ערך מומלץ</th><th>הערות</th></tr></thead><tbody>${RULES.map(r=>`<tr><td>${r[0]}</td><td style="white-space:nowrap">${r[1]}</td><td>${r[2]}</td></tr>`).join('')}</tbody></table></div>
+${SEC('s-rules',6,'grn','כללי תכנון – טבלת עזר',`<p class="rv">ערכים טיפוסיים במדפסת תלת־ממד רגילה. בהתאמה קריטית – כדאי להדפיס קודם חלק בדיקה קטן.</p><div class="sc rv"><table class="rules"><thead><tr><th>נושא</th><th>ערך מומלץ</th><th>הערות</th></tr></thead><tbody>${RULES.map(r=>`<tr><td>${r[0]}</td><td class="nw" data-l="ערך מומלץ">${r[1]}</td><td data-l="הערות">${r[2]}</td></tr>`).join('')}</tbody></table></div>
 <div class="cols" style="margin-top:28px"><div class="rv"><h3>חלקים גדולים ושטוחים</h3><p>במדפסת תלת־ממד רגילה, חומרים כמו ABS, ASA, PC וניילון מתכווצים בקירור, ומשטחים גדולים ושטוחים עלולים להתעקם בפינות. עוזר לתכנן פינות מעוגלות (במבט מלמעלה), צלעות במקום לוח עבה ועובי אחיד ככל האפשר.</p></div>
 <div class="rv"><h3>חלק גדול מהמדפסת</h3><p>מפצלים לכמה חלקים ומחברים: פינים מיישרים, זנב יונה, ברגים או הדבקה. כדאי שקו החיבור יעבור באזור עם עומס נמוך.</p></div>
 <div class="rv"><h3>קליפסים וזרועות קפיציות</h3><p>לתכנן כך שהזרוע מודפסת לאורך השכבות, ומחומר קשוח כמו PETG, PC או ניילון. PLA נוטה להישבר בכיפוף חוזר.</p></div>
@@ -601,8 +656,9 @@ ${band()}`};
 const NAV=Object.entries(T).map(([t,x])=>`<li class="it"><button class="top" aria-expanded="false">${x.n} <small>${x.p.replace('הדפסה ב','')}</small></button><div class="dd"><a href="#${t}">מה זה ${x.n}?<span class="hint">${x.p} – בשפה פשוטה</span></a><div class="has"><a href="#${t}">המדפסות במעבדה</a><div class="sub">${PR.filter(k=>P[k].t===t).map(k=>`<a href="#${k}">${P[k].n}</a>`).join('')}</div></div><a href="#${t}-materials">${x.mt}</a></div></li>`).join('')
 +`<li class="it"><a class="top" href="#scan">סריקה בתלת־ממד</a></li><li class="it"><a class="top" href="#laser">חיתוך לייזר</a></li><li class="it"><a class="top stu" href="#students">סטודנטים</a></li><li class="it"><a class="top cta" href="#contact">יצירת קשר</a></li>`;
 const hd=document.getElementById('hd'),nav=document.getElementById('nav');nav.innerHTML=NAV;
-const closeAll=except=>nav.querySelectorAll('.it.open').forEach(i=>{if(i!==except){i.classList.remove('open');i.querySelector('.top').setAttribute('aria-expanded','false')}});
-nav.querySelectorAll('button.top').forEach(b=>b.onclick=()=>{const it=b.parentElement;const o=!it.classList.contains('open');closeAll(it);it.classList.toggle('open',o);b.setAttribute('aria-expanded',o)});
+const closeAll=except=>{nav.querySelectorAll('.it.open').forEach(i=>{if(i!==except){i.classList.remove('open');i.querySelector('.top').setAttribute('aria-expanded','false')}});document.body.classList.toggle('sheet',!!nav.querySelector('.it.open'))};
+document.getElementById('scrim').onclick=()=>{closeAll();document.activeElement&&document.activeElement.blur()};
+nav.querySelectorAll('button.top').forEach(b=>b.onclick=()=>{const it=b.parentElement;const o=!it.classList.contains('open');closeAll(it);it.classList.toggle('open',o);b.setAttribute('aria-expanded',o);document.body.classList.toggle('sheet',o&&matchMedia('(max-width:640px)').matches)});
 document.addEventListener('click',e=>{if(!nav.contains(e.target))closeAll()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll()});
 /* ---------- router ---------- */

@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>מעבדת תלת־ממד</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--fdm:#e8590c;--sla:#7048e8;--sls:#0c8599;--grn:#2b8a3e;--pnk:#c2255c;--yel:#e67700;--bg:#fff;--soft:#f6f7f9;--tx:#111827;--mut:#4b5563;--ln:#e5e7eb;--ac:#0f4c81;--acs:#eaf1f8;--ok:#15803d;--mid:#a15c07;--bad:#b91c1c;color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--tx);font:18px/1.75 Heebo,system-ui,"Segoe UI",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--ac)}
+:focus-visible{outline:3px solid var(--ac);outline-offset:3px;border-radius:6px}
+.skip{position:absolute;right:16px;top:-60px;background:var(--ac);color:#fff;padding:8px 14px;border-radius:8px;z-index:100}.skip:focus{top:10px}
+.wrap{max-width:1080px;margin:auto;padding:0 20px}
+/* header */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--ln)}
+.hb{display:flex;align-items:center;gap:14px;min-height:68px}
+.logo{display:flex;flex-direction:column;line-height:1.15;text-decoration:none;color:var(--tx);margin-inline-end:auto}
+.logo b{font-size:1.15rem;font-weight:800}.logo span{font-size:.8rem;color:var(--mut)}
+.menu{display:none;background:none;border:1px solid var(--ln);border-radius:10px;padding:8px 12px;font:inherit;font-size:.95rem;cursor:pointer;color:var(--tx)}
+nav ul{list-style:none;margin:0;padding:0}
+.nav{display:flex;flex-wrap:wrap;align-items:center;gap:2px}
+.it{position:relative}
+.top{display:flex;align-items:center;gap:6px;background:none;border:0;font:inherit;font-size:.98rem;font-weight:500;color:var(--tx);padding:10px 12px;border-radius:10px;cursor:pointer;text-decoration:none}
+.top small{color:var(--mut);font-weight:400}
+button.top::after{content:"";width:7px;height:7px;border-left:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg) translateY(-2px);opacity:.6}
+.top:hover,.it.open>.top,.top[aria-current="page"]{background:var(--soft);color:var(--ac)}
+.cta,.cta[aria-current]{background:var(--ac)!important;color:#fff!important;font-weight:700}.cta:hover{background:#0b3a63!important}
+.dd{position:absolute;top:100%;right:0;min-width:250px;background:#fff;border:1px solid var(--ln);border-radius:14px;box-shadow:0 16px 40px rgba(17,24,39,.10);padding:8px;opacity:0;visibility:hidden;transform:translateY(6px);transition:.18s}
+.dd a{display:block;padding:9px 12px;border-radius:9px;color:var(--tx);text-decoration:none;font-size:.97rem}
+.dd a:hover,.dd a:focus-visible{background:var(--acs);color:var(--ac)}
+.dd .hint{display:block;font-size:.8rem;color:var(--mut)}
+.has{position:relative}.has>a::after{content:" ›";color:var(--mut)}
+.sub{position:absolute;top:-8px;right:100%;min-width:210px;background:#fff;border:1px solid var(--ln);border-radius:14px;box-shadow:0 16px 40px rgba(17,24,39,.10);padding:8px;opacity:0;visibility:hidden;transition:.15s}
+@media (hover:hover) and (min-width:901px){.it:hover>.dd{opacity:1;visibility:visible;transform:none}.has:hover>.sub{opacity:1;visibility:visible}}
+.it.open>.dd,.it:focus-within>.dd{opacity:1;visibility:visible;transform:none}.has:focus-within>.sub{opacity:1;visibility:visible}
+
+@media (max-width:1240px){.top small{display:none}}
+@media (max-width:900px){
+ header{position:static}
+ .hb{flex-wrap:wrap;gap:6px;padding:10px 0}
+ nav{width:100%}
+ .nav{position:relative;gap:6px}
+ .it{position:static}
+ .top{padding:7px 11px;font-size:.92rem;background:var(--soft);border-radius:9px}
+ .dd{left:0;right:0;min-width:0;top:calc(100% + 4px)}
+ .sub{position:static;opacity:1;visibility:visible;box-shadow:none;border:0;padding:0 14px 4px;min-width:0}
+ .has>a::after{content:""}
+}
+.q{margin:0 0 14px}.q b{display:block;margin-bottom:6px}.q .chips{margin:0}
+.qr{background:#fff;border-radius:12px;padding:14px 16px;margin:10px 0}.qr h3{margin:0!important;color:var(--c,var(--ac))}.qr p{margin:.2em 0 .4em;color:var(--mut);font-size:.97rem}
+.qv{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.88rem;color:var(--mut)}.qv b{color:var(--tx)}
+/* content */
+main{min-height:60vh}
+section{padding:72px 0}
+.alt{background:var(--soft)}
+h1{font-size:clamp(2.1rem,5vw,3.4rem);line-height:1.15;font-weight:800;margin:.1em 0 .35em;letter-spacing:-.5px}
+h2{font-size:clamp(1.5rem,3vw,2rem);line-height:1.25;margin:0 0 .4em;font-weight:800}
+h3{font-size:1.15rem;margin:0 0 .25em;font-weight:700}
+.lead{font-size:1.2rem;color:var(--mut);max-width:60ch}
+.kick{color:var(--ac);font-weight:700;font-size:.9rem;letter-spacing:.3px}
+.sec-h{margin-bottom:36px;max-width:62ch}.sec-h p{color:var(--mut);margin:0}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;background:var(--ac);color:#fff;text-decoration:none;font-weight:700;border:2px solid var(--ac);font:inherit;font-weight:700;cursor:pointer}
+.btn:hover{background:#0b3a63}
+.btn.ghost{background:#fff;color:var(--ac)}.btn.ghost:hover{background:var(--acs)}
+.btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.hero{padding:88px 0 64px}
+.hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:48px;align-items:center}
+.hero-art{color:var(--ac)}
+@media(max-width:820px){.hero-grid{grid-template-columns:1fr}.hero-art{max-width:300px}}
+.ic{width:44px;height:44px;border-radius:12px;background:color-mix(in srgb,var(--c,var(--ac)) 12%,#fff);color:var(--c,var(--ac));display:grid;place-items:center;flex:none}
+.ic svg{width:24px;height:24px}
+.ex{display:grid;grid-template-columns:repeat(3,1fr);gap:36px 32px}
+@media(max-width:860px){.ex{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.ex{grid-template-columns:1fr}}
+.ex div p{margin:0;color:var(--mut);font-size:1rem}.ex .ic{margin-bottom:12px}
+.svc{border-top:1px solid var(--ln)}
+.svc a{display:flex;gap:18px;align-items:center;padding:22px 4px;border-bottom:1px solid var(--ln);text-decoration:none;color:var(--tx);transition:.2s}
+.svc a:hover{background:var(--soft);padding-inline:14px}
+.svc .t{flex:1}.svc .t p{margin:0;color:var(--mut);font-size:1rem}.svc .ar{color:var(--ac);font-size:1.4rem}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;counter-reset:s;list-style:none;padding:0;margin:0}
+@media(max-width:860px){.steps{grid-template-columns:1fr 1fr}}@media(max-width:520px){.steps{grid-template-columns:1fr}}
+.steps li{counter-increment:s}.steps li::before{content:counter(s);display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--c,var(--ac));color:#fff;font-weight:800;margin-bottom:10px}
+.steps p{margin:0;color:var(--mut);font-size:1rem}
+.prn{display:grid;grid-template-columns:200px 1fr;gap:32px;align-items:center;padding:28px 0;border-top:1px solid var(--ln)}
+.prn:last-child{border-bottom:1px solid var(--ln)}
+.prn .pa{color:var(--ac);background:var(--soft);border-radius:16px;padding:14px}
+.prn p{margin:.2em 0 .5em;color:var(--mut)}
+@media(max-width:620px){.prn{grid-template-columns:1fr}.prn .pa{max-width:220px}}
+.tag{display:inline-block;font-size:.8rem;font-weight:700;color:var(--c,var(--ac));background:color-mix(in srgb,var(--c,var(--ac)) 12%,#fff);border-radius:99px;padding:1px 10px;margin-inline-start:6px;vertical-align:middle}
+.band{background:linear-gradient(120deg,var(--ac) 0%,#1864ab 55%,var(--sls) 100%);color:#fff;border-radius:20px;padding:44px 36px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between}
+.band h2{margin:0}.band p{margin:.3em 0 0;opacity:.9}.band .btn{background:#fff;color:var(--ac);border-color:#fff}
+.page{padding:56px 0 80px}
+.crumb{font-size:.9rem;color:var(--mut);margin-bottom:6px}.crumb a{text-decoration:none}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:40px}@media(max-width:760px){.cols{grid-template-columns:1fr}}
+.good li,.less li{margin:.35em 0;padding-inline-start:4px}
+.good{list-style:none;padding:0}.good li::before{content:"✓";color:var(--ok);font-weight:800;margin-inline-end:10px}
+.less{list-style:none;padding:0}.less li::before{content:"–";color:var(--mut);font-weight:800;margin-inline-end:10px}
+.box{background:var(--soft);border-radius:16px;padding:24px 26px}
+.note{font-size:.92rem;color:var(--mut);border-inline-start:3px solid var(--ln);padding:4px 14px;margin:20px 0}
+.sc{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.97rem}
+th,td{padding:12px 14px;text-align:start;vertical-align:top;border-bottom:1px solid var(--ln)}
+thead th{font-size:.9rem;color:var(--mut);font-weight:700;border-bottom:2px solid var(--ln)}
+tbody th{font-weight:700;white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 24px}
+.chip{border:1px solid var(--ln);background:#fff;border-radius:99px;padding:8px 16px;font:inherit;font-size:.95rem;cursor:pointer;color:var(--tx)}
+.chip[aria-pressed="true"]{background:var(--ac);border-color:var(--ac);color:#fff}
+.chip:hover{border-color:var(--ac)}
+.chip.lg[aria-pressed="true"]{background:#fff;color:var(--tx);border:2px solid var(--tx);font-weight:700}.chip.lg[aria-pressed="false"]{opacity:.55}
+.mats{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}@media(max-width:760px){.mats{grid-template-columns:1fr}}
+.mat{border:1px solid var(--ln);border-radius:16px;padding:22px 24px;background:#fff}
+.mat[hidden]{display:none}
+.mat .nick{color:var(--ac);font-weight:700;font-size:.95rem}
+.mat p{margin:.4em 0;font-size:1rem;color:var(--mut)}.mat p b{color:var(--tx)}
+.rate{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:14px 0 6px;font-size:.92rem;align-items:center}
+.dots{display:flex;gap:4px}.dots i{width:22px;height:7px;border-radius:4px;background:var(--ln)}.dots i.on{background:var(--ac)}
+.pr{font-size:.85rem!important}
+.choose{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin:18px 0}
+.opt{text-align:start;border:1px solid var(--ln);background:#fff;border-radius:14px;padding:14px 16px;font:inherit;font-size:1rem;cursor:pointer;color:var(--tx);display:flex;gap:12px;align-items:center}
+.opt:hover{border-color:var(--ac)}.opt[aria-pressed="true"]{border-color:var(--ac);background:var(--acs);box-shadow:inset 0 0 0 1px var(--ac)}
+.opt .ic{width:36px;height:36px}.opt .ic svg{width:20px;height:20px}
+.rec{border-radius:16px;background:var(--acs);padding:24px 26px;margin-top:8px}
+.rec h3{color:var(--ac);font-size:1.3rem}
+details{border:1px solid var(--ln);border-radius:16px;padding:0 22px;margin:22px 0;background:#fff}
+summary{cursor:pointer;padding:18px 0;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:10px}
+summary::after{content:"+";color:var(--ac);font-size:1.4rem;line-height:1}details[open] summary::after{content:"–"}
+details>div{padding-bottom:22px}
+.cw{position:relative}.cw svg{width:100%;height:auto;display:block}
+.tip{position:absolute;pointer-events:none;background:#fff;color:var(--tx);border:1px solid var(--ln);box-shadow:0 8px 24px rgba(0,0,0,.12);border-radius:10px;padding:8px 12px;font-size:.85rem;display:none;white-space:nowrap;z-index:5}
+.dr{stroke-dasharray:1;stroke-dashoffset:1;animation:dr 1.2s ease forwards}@keyframes dr{to{stroke-dashoffset:0}}
+.res{list-style:none;padding:0;margin:14px 0}.res li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--ln)}
+.st{font-weight:700;white-space:nowrap}.st.g{color:var(--ok)}.st.a{color:var(--mid)}.st.r{color:var(--bad)}.st.na{color:var(--mut);font-weight:400}
+td.g{color:var(--ok)}td.a{color:var(--mid)}td.r{color:var(--bad);font-weight:700}td.na{color:var(--mut)}
+select,input,textarea{font:inherit;font-size:1rem;color:var(--tx);background:#fff;border:1px solid #cbd2da;border-radius:10px;padding:10px 12px;width:100%}
+label{display:block;font-weight:500;margin:14px 0 6px}
+.contact{display:grid;grid-template-columns:.9fr 1.1fr;gap:40px}@media(max-width:820px){.contact{grid-template-columns:1fr}}
+.cinfo{list-style:none;padding:0;margin:0}.cinfo li{display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--ln)}
+.cinfo b{display:block}.mail{font-size:1.15rem;font-weight:700;word-break:break-all}
+
+.c-fdm{--c:var(--fdm)}.c-sla{--c:var(--sla)}.c-sls{--c:var(--sls)}.c-grn{--c:var(--grn)}.c-pnk{--c:var(--pnk)}.c-yel{--c:var(--yel)}.c-ac{--c:var(--ac)}
+.prn .pa,.tc-art{color:var(--c,var(--ac));background:color-mix(in srgb,var(--c,var(--ac)) 7%,#fff)}
+.page .lead a,.page p a{color:var(--c,var(--ac))}
+.size{display:inline-flex;align-items:center;gap:6px;font-size:.92rem;font-weight:700;color:var(--tx);background:var(--soft);border-radius:8px;padding:3px 10px;margin:2px 0 8px}
+.size small{font-weight:400;color:var(--mut)}
+.mat{border-top:4px solid var(--c,var(--ac))}.mat .nick{color:var(--c,var(--ac))}.mat .dots i.on{background:var(--c,var(--ac))}
+.hero-art .l{fill:none}
+.top.stu{color:var(--fdm);font-weight:700}
+th button.sort{all:unset;cursor:pointer;color:inherit;font-weight:700}th button.sort:focus-visible{outline:3px solid var(--ac)}
+th[aria-sort="ascending"] .sort::after{content:" ▲"}th[aria-sort="descending"] .sort::after{content:" ▼"}
+.ft td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.ebar{display:inline-block;height:6px;border-radius:3px;background:var(--fdm);vertical-align:middle;margin-inline-start:8px;opacity:.75}
+.grp{display:inline-block;font-size:.75rem;font-weight:700;border-radius:6px;padding:0 7px;color:#fff}
+.stu-hero{background:linear-gradient(135deg,color-mix(in srgb,var(--fdm) 10%,#fff),#fff 60%);padding:64px 0 40px;border-bottom:1px solid var(--ln)}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.toc button{border:1px solid var(--ln);background:#fff;border-radius:99px;padding:7px 14px;font:inherit;font-size:.92rem;cursor:pointer;color:var(--tx)}
+.toc button:hover{border-color:var(--fdm);color:var(--fdm)}
+.gs{scroll-margin-top:72px;padding:56px 0;border-bottom:1px solid var(--ln)}
+.gs h2{display:flex;align-items:center;gap:12px}
+.gs h2 .num{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--c,var(--fdm));color:#fff;font-size:1.1rem;flex:none}
+.gs h3{margin-top:1.4em}
+.fig{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin:20px 0}
+.fig figure{margin:0;border:1px solid var(--ln);border-radius:16px;padding:16px;background:#fff}
+.fig figcaption{font-size:.92rem;color:var(--mut);margin-top:8px}
+.fig figcaption b{color:var(--tx)}
+.fig svg{width:100%;height:auto;display:block}
+.bad{color:var(--bad);font-weight:700}.okc{color:var(--ok);font-weight:700}
+.rules td:first-child{font-weight:700}
+.chk{list-style:none;padding:0}.chk li{margin:6px 0}.chk label{display:flex;gap:12px;align-items:flex-start;font-weight:400;margin:0;cursor:pointer}
+.chk input{width:20px;height:20px;flex:none;margin-top:5px;accent-color:var(--fdm)}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:18px 0}
+.kv div{background:var(--soft);border-radius:12px;padding:12px 14px}.kv b{display:block;font-size:1.15rem;color:var(--fdm)}.kv span{font-size:.88rem;color:var(--mut)}
+.tip2{background:color-mix(in srgb,var(--fdm) 8%,#fff);border-inline-start:4px solid var(--fdm);border-radius:10px;padding:12px 16px;margin:16px 0}
+footer{border-top:1px solid var(--ln);padding:36px 0;color:var(--mut);font-size:.92rem}
+.fg{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px}
+.js .rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}.js .rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.js .rv{opacity:1;transform:none;transition:none}.dr{animation:none;stroke-dashoffset:0}*{transition:none!important}}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<a class="skip" href="#m">דילוג לתוכן</a>
+<header id="hd"><div class="wrap hb">
+ <a class="logo" href="#home"><b>מעבדת תלת־ממד</b><span>אוניברסיטת בן־גוריון בנגב</span></a>
+  <nav id="nv" aria-label="ניווט ראשי"><ul class="nav" id="nav"></ul></nav>
+</div></header>
+<main id="m" tabindex="-1"></main>
+<footer><div class="wrap fg">
+ <div><b style="color:var(--tx)">מעבדת תלת־ממד – המעבדה של פרופ׳ אמיר שפירא</b><br>בניין 57, מעבדה 2 · אוניברסיטת בן־גוריון בנגב, באר שבע</div>
+ <div><a href="mailto:bgu.amc@gmail.com">bgu.amc@gmail.com</a><br><a href="#contact">ליצירת קשר</a></div>
+</div></footer>
+<script>
+document.documentElement.classList.add('js');
+const EMAIL='bgu.amc@gmail.com';
+/* ---------- icons ---------- */
+const I=d=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const IC={
+cube:I('<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/>'),
+wrench:I('<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-.6-.6-2.5z"/>'),
+chip:I('<rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 9h6v6H9zM9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>'),
+flask:I('<path d="M9 3h6M10 3v6L4.5 19a1.5 1.5 0 0 0 1.3 2h12.4a1.5 1.5 0 0 0 1.3-2L14 9V3"/><path d="M7 15h10"/>'),
+build:I('<path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/>'),
+wave:I('<path d="M3 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/><path d="M3 17c2-4 4-4 6 0s4 4 6 0 4-4 6 0" opacity=".5"/>'),
+eye:I('<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'),
+gear:I('<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>'),
+laser:I('<path d="M12 2v4M9 6h6l-1 4h-4z"/><path d="M12 10v7" stroke-dasharray="2 2"/><path d="M3 20h18M7 17h10"/>'),
+scan:I('<path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3"/><path d="M3 12h18"/>'),
+pen:I('<path d="M3 21l3.5-1L19 7.5a2.1 2.1 0 0 0-3-3L3.5 17z"/><path d="M14.5 6l3 3"/>'),
+printer:I('<path d="M4 20V4h16v16"/><path d="M4 9h16"/><path d="M10 9v3l2 2 2-2V9"/><path d="M8 20h8v-3H8z"/>'),
+drop:I('<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>'),
+dust:I('<circle cx="6" cy="8" r="1.3"/><circle cx="12" cy="6" r="1.3"/><circle cx="18" cy="8" r="1.3"/><circle cx="9" cy="12" r="1.3"/><circle cx="15" cy="12" r="1.3"/><path d="M4 17h16v3H4z"/>'),
+mail:I('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'),
+pin:I('<path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/>'),
+sun:I('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'),
+fire:I('<path d="M12 21a6 6 0 0 0 6-6c0-4-3-6-4-10-2 2-3 4-3 6-1-1-1.5-2-1.5-3C7 10 6 12.5 6 15a6 6 0 0 0 6 6z"/>'),
+shield:I('<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>'),
+coin:I('<circle cx="12" cy="12" r="8"/><path d="M12 8v8M9.5 10.5c0-1 1-1.5 2.5-1.5s2.5.6 2.5 1.5-1 1.3-2.5 1.5-2.5.6-2.5 1.5 1 1.5 2.5 1.5 2.5-.5 2.5-1.5"/>'),
+star:I('<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>'),
+link:I('<path d="M9 15l6-6M10 6l1-1a4 4 0 0 1 6 6l-1 1M14 18l-1 1a4 4 0 0 1-6-6l1-1"/>'),
+q:I('<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17h.01"/>')};
+const ART={
+fdm:`<svg viewBox="0 0 200 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="איור מדפסת FDM"><path d="M30 150V20h140v130M30 150h140"/><path d="M40 136h120"/><rect x="72" y="112" width="56" height="24" fill="currentColor" fill-opacity=".12"/><path d="M40 52h120"/><rect x="88" y="44" width="24" height="22" rx="3"/><path d="M100 66v12l-3 4h6l-3-4"/></svg>`,
+sla:`<svg viewBox="0 0 200 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="איור מדפסת SLA"><path d="M100 14v50"/><rect x="62" y="62" width="76" height="8" rx="2"/><path d="M78 70v20h44V70" fill="currentColor" fill-opacity=".12"/><path d="M48 96l8 50h88l8-50z"/><path d="M52 108h96" opacity=".4"/></svg>`,
+sls:`<svg viewBox="0 0 200 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="איור מדפסת SLS"><rect x="88" y="12" width="24" height="22" rx="3"/><path d="M100 34l-14 68" stroke-dasharray="3 4"/><rect x="36" y="92" width="128" height="56" rx="4"/><rect x="72" y="104" width="40" height="18" rx="2" fill="currentColor" fill-opacity=".12"/>${Array.from({length:18},(_,i)=>`<circle cx="${46+(i%9)*14}" cy="${132+Math.floor(i/9)*9}" r="1.3" fill="currentColor" stroke="none"/>`).join('')}</svg>`,
+hero:`<svg viewBox="0 0 260 240" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="איור קובייה תלת־ממדית בשכבות"><path d="M130 30l90 50v90l-90 50-90-50V80z" fill="currentColor" fill-opacity=".05"/><path d="M130 130l90-50M130 130v90M130 130L40 80"/>${[0,1,2,3,4,5,6,7].map(i=>`<path d="M40 ${95+i*10}l90 50 90-50" stroke="${['#e8590c','#f08c00','#2b8a3e','#0c8599','#1864ab','#7048e8','#c2255c','#e8590c'][i]}" stroke-width="2.4"/>`).join('')}</svg>`};
+/* ---------- extra art ---------- */
+const SVA=(inner,lab)=>`<svg viewBox="0 0 200 160" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="${lab}">${inner}</svg>`;
+ART.belt=SVA(`<path d="M20 30h160M20 30v110M180 30v110"/><circle cx="40" cy="122" r="10"/><circle cx="160" cy="122" r="10"/><path d="M40 112h120M40 132h120"/><rect x="58" y="96" width="92" height="16" rx="2" fill="currentColor" fill-opacity=".14"/><path d="M58 104h92" opacity=".4"/><path d="M70 40l40 40"/><rect x="100" y="70" width="18" height="18" rx="3" transform="rotate(45 109 79)"/>`,'איור מדפסת מסוע');
+ART.mx=SVA(`<rect x="34" y="16" width="132" height="132" rx="10"/><rect x="50" y="34" width="100" height="84" rx="4" fill="currentColor" fill-opacity=".06"/><path d="M58 104h84"/><rect x="82" y="88" width="36" height="16" fill="currentColor" fill-opacity=".14"/><rect x="88" y="48" width="24" height="16" rx="3"/><path d="M100 64v8"/><path d="M60 128c4-6 8 6 12 0s8 6 12 0M116 128c4-6 8 6 12 0s8 6 12 0"/>`,'איור מדפסת תעשייתית עם תא מחומם');
+ART.scan=SVA(`<rect x="22" y="22" width="44" height="26" rx="6"/><circle cx="34" cy="35" r="5"/><circle cx="54" cy="35" r="5"/><path d="M60 48l60 56M30 48l70 60" stroke-dasharray="4 4"/><path d="M96 70c18-14 46-8 52 12 6 22-12 38-34 36-22-2-32-30-18-48z" fill="currentColor" fill-opacity=".12"/><ellipse cx="124" cy="136" rx="50" ry="10"/><path d="M98 116l-6 20M150 116l6 20" opacity=".4"/>`,'איור סורק תלת־ממד');
+ART.laser=SVA(`<path d="M20 36h160"/><rect x="74" y="26" width="30" height="34" rx="4"/><path d="M89 60v66" stroke="#e03131" stroke-width="2.5"/><rect x="24" y="126" width="152" height="16" rx="2" fill="currentColor" fill-opacity=".1"/><path d="M40 134h30a12 12 0 1 1 24 0h70" stroke-dasharray="3 4"/><path d="M84 122l5-6 5 6" stroke="#e03131"/>`,'איור מכונת חיתוך לייזר');
+/* ---------- data ---------- */
+const L=a=>`<ul>${a.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+const T={
+fdm:{n:'FDM',p:'הדפסה בחוט פלסטיק',mt:'סוגי פלסטיק',
+ how:'המדפסת מתיכה חוט פלסטיק ומניחה אותו שכבה אחר שכבה, עד שנבנה החלק. זו השיטה הנפוצה, המהירה והחסכונית ביותר, ויש לה מבחר חומרים גדול – מפלסטיק בסיסי ועד חומרים הנדסיים מחוזקים בסיבי פחמן.',
+ good:['אבות טיפוס ובדיקות צורה והתאמה','חלקים שימושיים: מחזיקים, מארזים, תפסנים','חלקים גדולים יחסית – ובמדפסת המסוע גם חלקים ארוכים מאוד','חלקים גמישים, עמידים לחום או לשימוש בחוץ – לפי החומר','הדפסה בכמה צבעים, ושילוב חומר קשיח וגמיש באותו חלק'],
+ less:['פרטים זעירים מאוד','משטח חלק לגמרי – קווי השכבות נראים מעט'],
+ ex:['קופסה ללוח אלקטרוני','מחזיק לחיישן או למצלמה','חלק חילוף לציוד','דגם לפרויקט או להצגה','פרופיל או מסילה ארוכים']},
+sla:{n:'SLA',p:'הדפסה בשרף',mt:'סוגי שרף ועמידות כימית',
+ how:'אור לייזר מקשה שרף נוזלי שכבה אחר שכבה. התוצאה מדויקת מאוד, עם משטח חלק שנראה כמעט כמו מוצר מוגמר.',
+ good:['פרטים קטנים ועדינים','משטח חלק ומראה מקצועי','חלקים שקופים','מודלים מדויקים למחקר ולהצגה','שרפים מיוחדים: עמידים לחום, גמישים, מעכבי בעירה'],
+ less:['חלקים גדולים – הגודל המרבי 14.5 × 14.5 × 18.5 ס״מ','חלקים שיספגו מכות חזקות – חלק מהשרפים שבירים יחסית'],
+ ex:['מודל אנטומי או מדעי','תבנית ליציקת סיליקון','חלק שקוף לצפייה בזרימה','אב טיפוס למוצר קטן ומדויק']},
+sls:{n:'SLS',p:'הדפסה באבקת ניילון',mt:'החומר – Nylon 12',
+ how:'לייזר מאחה אבקת ניילון דקה שכבה אחר שכבה. האבקה שמסביב תומכת בחלק בזמן ההדפסה, ולכן אפשר להדפיס כמעט כל צורה – גם חלקים שזזים זה בתוך זה.',
+ good:['חלקים חזקים לשימוש אמיתי','צורות מורכבות וחללים פנימיים','מנגנונים, צירים ותפסים בהדפסה אחת','סדרה של כמה עשרות חלקים זהים'],
+ less:['משטח מט ומעט מחוספס, בצבע אפור או לבן','חלקים גדולים מ־16.5 × 16.5 × 30 ס״מ','חלק בודד בדחיפות – הכנת ההדפסה ארוכה יותר'],
+ ex:['ציר או מנגנון שזז','חלק מכני לרובוט או לרחפן','מארז חזק ועמיד','סדרת חלקים לניסוי']}};
+const TAG={fdm:'FDM',sla:'SLA',sls:'SLS',scan:'סריקה',laser:'חיתוך לייזר'};
+const P={
+h2c:{n:'Bambu Lab H2C',t:'fdm',art:'fdm',sl:'גודל מרבי של חלק',size:'30.5 × 32 × 32.5 ס״מ',
+ s:'מדפסת סגורה ומתקדמת שמדפיסה בכמה צבעים ובכמה חומרים שונים באותה הדפסה – למשל חלק קשיח עם אזור גמיש. מתאימה גם לחומרים הנדסיים חזקים ועמידים לחום.',
+ lead:'ה־H2C היא המדפסת המרכזית במעבדה. היא יכולה להחליף חומרים תוך כדי הדפסה, ולכן אפשר לקבל חלק אחד שמשלב כמה צבעים, או חומר קשיח וחומר גמיש יחד – בלי הרכבה ובלי הדבקה. התא הסגור והמחומם שלה מאפשר להדפיס גם חומרים הנדסיים כמו פוליקרבונט וניילון מחוזק.',
+ best:['חלקים חזקים ועמידים לחום','חלקים בכמה צבעים','שילוב קשיח וגמיש באותו חלק (למשל ידית עם אחיזה רכה)','חלקים לשימוש בחוץ (ASA)','חומרים עם סיבי פחמן או זכוכית'],
+ know:['גודל מרבי: 30.5 × 32 × 32.5 ס״מ','חלק גדול יותר יודפס בכמה חלקים ויחובר']},
+a1:{n:'Bambu Lab A1',t:'fdm',art:'fdm',sl:'גודל מרבי של חלק',size:'25.6 × 25.6 × 25.6 ס״מ',
+ s:'מדפסת מהירה וחסכונית לאבות טיפוס, מודלים וחלקים יומיומיים ב־PLA, PETG ו־TPU הגמיש.',
+ lead:'מדפסת פתוחה, מהירה ופשוטה – מתאימה כשצריך חלק מהר ובעלות נמוכה, בחומרים הנפוצים.',
+ best:['אבות טיפוס מהירים','מודלים ודגמים','חלקים גמישים מ־TPU'],know:['גודל מרבי: 25.6 × 25.6 × 25.6 ס״מ','חומרים: PLA, PETG, TPU. לחומרים עמידים לחום – H2C']},
+cr30:{n:'Creality CR‑30 (מדפסת מסוע)',t:'fdm',art:'belt',sl:'גודל מרבי של חלק',size:'20 × 17 ס״מ בחתך, באורך כמעט בלתי מוגבל',
+ s:'מדפסת שבה החלק נבנה על רצועה נעה (מסוע) במקום על משטח קבוע – כך אפשר להדפיס חלקים ארוכים מאוד, או סדרה ארוכה של חלקים זהים ברצף.',
+ lead:'במדפסת רגילה החלק מוגבל לגודל המשטח. ב־CR‑30 משטח ההדפסה הוא רצועה, וראש ההדפסה מוטה ב־45°. אחרי כל שכבה הרצועה מתקדמת מעט, והחלק „יוצא” מהמדפסת לאורכה. לכן הרוחב והגובה מוגבלים (20 × 17 ס״מ), אבל האורך כמעט לא מוגבל.',
+ best:['חלקים ארוכים: פרופילים, מסילות, קורות, ידיות ארוכות','סדרה של הרבה חלקים זהים – החלקים יורדים מהמסוע אחד אחרי השני','שלטים ורצועות ארוכים'],
+ know:['חתך מרבי: 20 × 17 ס״מ; האורך מוגבל בפועל רק ביציבות החלק','חומרים: PLA, PETG ו־TPU','בגלל הזווית של 45°, צורת התמיכות שונה ממדפסת רגילה – כדאי להתייעץ לפני תכנון']},
+mx:{n:'MakerBot METHOD X',t:'fdm',art:'mx',sl:'גודל מרבי של חלק',size:'19 × 19 × 19.6 ס״מ',
+ s:'מדפסת תעשייתית עם תא מחומם עד 100°C, לחלקי ABS הנדסיים מדויקים – עם חומר תמיכה מסיס שמאפשר גיאומטריות פנימיות מורכבות.',
+ lead:'ה־METHOD X מיועדת לחלקים הנדסיים שצריכים יציבות ממדית. התא שלה מחומם עד 100°C, כך שחומרים כמו ABS מתקררים לאט ובאחידות, והשכבות נצמדות היטב. היא מדפיסה עם שני ראשים: אחד לחומר החלק ואחד לחומר תמיכה מסיס (SR‑30), שמומס באמבט ייעודי אחרי ההדפסה – כך מתקבלים משטחים נקיים גם בתוך חללים סגורים.',
+ best:['חלקי ABS הנדסיים','חללים ותעלות פנימיים שאי אפשר להגיע אליהם להסרת תמיכה','חלקים שבהם חשובה היציבות הממדית'],
+ know:['גודל מרבי: 19 × 19 × 19.6 ס״מ (עם חומר תמיכה: 15.2 × 19 × 19.6 ס״מ)','דיוק לפי היצרן: ±0.2 מ״מ','זמינות חומרים – לבירור במייל']},
+f3b:{n:'Formlabs Form 3B',t:'sla',art:'sla',sl:'גודל מרבי של חלק',size:'14.5 × 14.5 × 18.5 ס״מ',
+ s:'מדפסת שרף לפרטים קטנים ולמשטח חלק מאוד. מתאימה למודלים מדויקים, לחלקים שקופים ולשרפים מיוחדים – כולל שרפים לשימושים רפואיים.',
+ lead:'מדפסת SLA שמקשה שרף נוזלי בעזרת לייזר. החלקים יוצאים מדויקים מאוד ועם משטח חלק, ואחרי ההדפסה הם נשטפים ועוברים הקשיה סופית באור ובחום.',
+ best:['פרטים עדינים','חלקים שקופים','מודלים להצגה ולמחקר','תבניות ליציקה'],know:['גודל מרבי: 14.5 × 14.5 × 18.5 ס״מ']},
+f1:{n:'Formlabs Fuse 1+',t:'sls',art:'sls',sl:'גודל מרבי של חלק',size:'16.5 × 16.5 × 30 ס״מ',
+ s:'מדפסת אבקת ניילון לחלקים חזקים בצורות מורכבות. אין צורך בתמיכות, כך שאפשר להדפיס גם מנגנונים שזזים בהדפסה אחת.',
+ lead:'מדפסת SLS שמאחה אבקת ניילון בעזרת לייזר. האבקה שמסביב מחזיקה את החלק, ולכן אין צורך בתמיכות ואפשר לסדר הרבה חלקים זה מעל זה בהדפסה אחת.',
+ best:['חלקים מכניים חזקים','צורות מורכבות','סדרות של חלקים'],know:['גודל מרבי: 16.5 × 16.5 × 30 ס״מ','חומר: Nylon 12','המשטח מט ובצבע אפור או לבן']},
+ein:{n:'EinScan Pro HD',t:'scan',art:'scan',sl:'שטח סריקה בצילום אחד',size:'21 × 16 עד 31 × 24 ס״מ',link:'scan',
+ s:'סורק תלת־ממד ידני ושולחני: מצלם את החפץ מכל הכיוונים ויוצר ממנו קובץ דיגיטלי מדויק.'},
+hexa:{n:'FLUX HEXA',t:'laser',art:'laser',sl:'שטח עבודה',size:'73 × 41 ס״מ',link:'laser',
+ s:'מכונת חיתוך וחריטה בלייזר CO₂ בהספק 60 ואט, עם מצלמה שמציגה את החומר לפני החיתוך ופוקוס אוטומטי.'}};
+const PR=Object.keys(P).filter(k=>['fdm','sla','sls'].includes(P[k].t));
+const SV=[['fdm','הדפסת FDM – פלסטיק','חסכוני ומהיר: אבות טיפוס, מארזים, מחזיקים וחלקים שימושיים – גם בכמה צבעים וחומרים.','printer','fdm'],
+['sla','הדפסת SLA – שרף','מדויק וחלק: מודלים, פרטים קטנים וחלקים שקופים.','drop','sla'],
+['sls','הדפסת SLS – ניילון','חזק ומורכב: חלקים מכניים ומנגנונים שזזים.','dust','sls'],
+['scan','סריקה בתלת־ממד','הופכים חפץ אמיתי לקובץ – לשחזור, למדידה או לתיעוד.','scan','grn'],
+['laser','חיתוך לייזר','חיתוך וחריטה של לוחות: שלטים, תבניות, מארזים שטוחים.','laser','pnk']];
+const EX=[['cube','אבות טיפוס','בודקים צורה, גודל והרכבה לפני ייצור.'],['wrench','חלקי חילוף','ידית שנשברה, תפס, מחזיק – אפשר גם לסרוק ולשחזר.'],['chip','מארזים לאלקטרוניקה','קופסה בהתאמה מדויקת ללוח, לחיישן או לסוללה.'],['flask','ציוד למחקר ולמעבדה','מתקנים, מחזיקים ותפסנים שמותאמים לניסוי.'],['build','מודלים ודגמים','דגם אדריכלי, מודל להצגה או לפרויקט גמר.'],['wave','קשיח וגמיש בחלק אחד','ידית עם אחיזה רכה, רגליות, אטם מובנה.'],['eye','חלקים שקופים ומדויקים','פרטים קטנים, משטח חלק, אפשרות לראות פנימה.'],['gear','מנגנונים חזקים','צירים, גלגלי שיניים וחלקים שזזים.'],['laser','חיתוך וחריטה','שלטים, לוחות ותבניות בחיתוך לייזר.']];
+const FM=[
+['PLA','הבסיסי והנפוץ','פלסטיק נוח וחסכוני עם גימור יפה ומבחר צבעים גדול.','מודלים, דגמים, אבות טיפוס להצגה',[3,1,1,1],'A1, H2C, CR‑30','look cheap'],
+['PLA מט / משי / שיש','למראה מיוחד','PLA בגימור מט, מבריק כמו משי או בדוגמת שיש ועץ.','מתנות, דגמים, מוצגים',[2,1,1,1],'A1, H2C','look'],
+['PLA‑CF','PLA עם סיבי פחמן','קשיח יותר מ־PLA, עם גימור מט מקצועי שמסתיר קווי שכבה.','אבות טיפוס איכותיים, מארזים',[3,1,1,1],'H2C','look strong'],
+['PETG','החזק ליומיום','עמיד יותר ממכות ומחום מ־PLA, ועמיד גם במים ובחלק מהכימיקלים.','חלקים שימושיים, מכלים, מחזיקים',[3,2,2,3],'A1, H2C, CR‑30','daily cheap'],
+['PETG‑CF','PETG עם סיבי פחמן','קשיח ויציב, עם גימור מט.','חלקים מכניים קלים, מארזים',[4,1,2,3],'H2C','daily strong'],
+['TPU','גמיש כמו גומי','חומר אלסטי שחוזר לצורתו. בקשיות שונות – מרך מאוד ועד גמיש־קשוח. אפשר לשלב אותו עם חומר קשיח באותו חלק.','אטמים, רפידות, כיסויים, אזורי אחיזה',[2,5,2,3],'A1, H2C, CR‑30','flex'],
+['ABS','עמיד לחום ולמכות','הפלסטיק של לבני הלגו – חזק ועמיד לחום בינוני.','מארזים, חלקים לרכב, חלקים מכניים',[3,2,3,2],'H2C, METHOD X','heat daily'],
+['ASA','עמיד לשמש','דומה ל־ABS, אבל לא דוהה ולא נחלש בשמש.','חלקים לשימוש בחוץ, שלטים, מתקנים',[3,2,3,5],'H2C','out heat'],
+['PC – פוליקרבונט','חזק ועמיד לחום','חזק מאוד ועמיד בטמפרטורות גבוהות.','חלקים מכניים תובעניים, מחזיקים לציוד חם',[4,2,4,3],'H2C','strong heat'],
+['PC FR','פוליקרבונט מעכב בעירה','פוליקרבונט עם תוספים שמגבילים בעירה. ראו הסבר על דירוג UL 94 למטה.','מארזים לאלקטרוניקה ולציוד חשמלי',[4,2,4,3],'H2C','fr heat strong'],
+['PA / ניילון','קשוח ועמיד לשחיקה','ניילון עמיד לשחיקה ולחיכוך, ומעט גמיש.','גלגלי שיניים, צירים, חלקים נעים',[4,3,4,3],'H2C','strong heat'],
+['PAHT‑CF / PA6‑CF','ניילון עם סיבי פחמן','מהחזקים והקשיחים שאפשר להדפיס, ועמיד לחום גבוה.','חלקים לרובוטיקה, תושבות, כלים',[5,1,5,3],'H2C','strong heat'],
+['PA6‑GF','ניילון עם סיבי זכוכית','חזק ועמיד, מעט פחות קשיח מסיבי פחמן ופחות שביר.','חלקים מכניים, תפסנים',[5,2,5,3],'H2C','strong heat'],
+['PET‑CF','קשיח ויציב בלחות','קשיח מאוד ושומר על חוזקו גם בלחות ובחום.','חלקים מדויקים, תושבות, חלקים חמים',[4,1,5,4],'H2C','strong heat out'],
+['PPA‑CF / PPS‑CF','חומרים מתקדמים לחום גבוה','חומרים הנדסיים לטמפרטורות גבוהות מאוד ולעומסים כבדים. PPS‑CF גם מעכב בעירה ועמיד כימית. לפי זמינות.','חלקים ליד מנועים או ציוד חם',[5,1,5,4],'H2C','strong heat fr']];
+const NEED=[['all','הכל'],['look','מראה ודגמים'],['cheap','חסכוני'],['daily','שימוש יומיומי'],['strong','חזק במיוחד'],['flex','גמיש'],['heat','עמיד לחום'],['out','לשימוש בחוץ'],['fr','מעכב בעירה']];
+const SLAM=[['Standard (אפור / לבן / שחור)','מראה וגימור','פרטים חדים ומשטח חלק. שביר יחסית.','מודלים, דגמים, אבות טיפוס להצגה'],['Clear – שקוף','שקוף','שקוף לאחר ליטוש.','חלקים שרוצים לראות דרכם, תעלות זרימה, מנורות'],['Tough 2000','חזק כמו ABS','קשיח ועמיד לשבירה.','מארזים, מחזיקים, חלקים שמורכבים בברגים'],['Durable','גמיש־קשוח','מתכופף ולא נשבר, דומה לפוליאתילן.','קליפסים, תפסים, חלקים שנלחצים'],['Rigid 4000 / 10K','קשיח מאוד','שרף מחוזק בזכוכית – כמעט לא מתכופף.','תבניות, תושבות מדויקות'],['Flexible 80A','גמיש כמו גומי','רך וחוזר לצורתו.','אטמים, ידיות רכות, מודלים רכים'],['High Temp','עמיד לחום גבוה','עמיד בטמפרטורות גבוהות.','חלקים ליד חום, תבניות לחום'],['Flame Retardant','מעכב בעירה','שרף שמגביל בעירה.','חלקים לציוד חשמלי ולתחבורה'],['BioMed','למגע עם הגוף','שרפים לשימושים רפואיים לפי תקני היצרן.','מודלים רפואיים, מדריכים כירורגיים']];
+const SLSM=[['Nylon 12','החומר במעבדה','ניילון חזק, קשוח ומדויק, עם עמידות טובה מאוד לשמנים ולרוב הכימיקלים. החלקים יוצאים בצבע אפור, עם משטח מט.','חלקים מכניים, מארזים, צירים, מנגנונים שזזים וחלקים לשימוש אמיתי']];
+/* chemical resistance (Formlabs, 24h weight gain %) */
+const SOL=['Water','Salt Water (3.5% NaCl)','Acetic Acid 5%','Bleach ~5% NaOCl','Hydrogen Peroxide 3%','Isopropyl Alcohol (IPA)','Acetone','Isooctane (Gasoline)','Diesel Fuel','Mineral Oil (Light)','Hydraulic Oil','Xylene','Butyl Acetate','Strong Acid (HCl conc.)','Sodium Hydroxide 0.025% (pH 10)'];
+// order of source columns used below: water, salt, acetic, bleach, H2O2, IPA, acetone, isooctane, diesel, mineral light, hydraulic, xylene, butyl acetate, HCl, NaOH
+const CH={sla:[
+['Standard (Grey V4)','<1,<1,<1,<1,<1,<1,C,<1,<1,<1,<1,<1,<1,D,<1'],
+['Clear V4','<1,<1,<1,<1,<1,<1,C,<1,<1,<1,<1,<1,<1,D,<1'],
+['Tough 2000 V1','0.6,0.6,0.7,0.6,0.6,3.7,18.8,<0.1,0.1,0.1,<0.1,4.1,6.2,3,0.6'],
+['Durable V2','<1,<1,1.3,<1,1,5.1,C,<1,<1,<1,<1,6.5,7.9,D,<1'],
+['Rigid 4000','0.7,0.7,0.8,0.7,0.9,0.4,3.3,<0.1,<0.1,0.2,0.2,<0.1,<0.1,5.3,0.7'],
+['Rigid 10K','<0.1,0.1,<0.1,0.1,<0.1,<0.1,<0.1,0,0.1,0.2,0.2,<0.1,0.1,0.2,0.1'],
+['Flexible 80A','0.7,0.5,0.9,0.6,0.7,11.7,37.4,1.6,2.3,0.1,1,64.1,51.4,28.6,0.6'],
+['High Temp V2','<1,<1,<1,<1,<1,<1,2,<1,<1,<1,<1,<1,<1,<1,<1'],
+['Flame Retardant','0.2,0.2,N,0.3,0.2,0.2,2.1,<0.1,<0.1,<0.1,<0.1,N,0.4,<0.1,0.3']],
+sls:[['Nylon 12','0.1,0.2,0.1,0.2,0.2,0.2,0.1,<0.1,0.4,0.5,0.6,0.1,0.2,0.8,0.2']]};
+const pv=v=>v==='N'?{t:'לא נבדק',n:null,c:'na',s:'לא נבדק'}:v==='C'?{t:'נסדק',n:99,c:'r',s:'✗ לא מומלץ'}:v==='D'?{t:'התעוות',n:99,c:'r',s:'✗ לא מומלץ'}:(()=>{const n=v[0]==='<'?+v.slice(1)/2:+v;return{t:v+'%',n,c:n<1?'g':n<=5?'a':'r',s:n<1?'✓ עמיד':n<=5?'~ ספיגה מסוימת':'✗ לא מומלץ'}})();
+/* ---------- stress-strain ---------- */
+const sig=(E,su,eb,n)=>{const e=eb/100;let lo=su,hi=su*1e4;for(let i=0;i<80;i++){const s=(lo+hi)/2;(E*e/Math.pow(1+Math.pow(E*e/s,n),1/n))<su?lo=s:hi=s}const s=(lo+hi)/2;return x=>E*x/Math.pow(1+Math.pow(E*x/s,n),1/n)};
+const COL=['#0f4c81','#d9480f','#7048e8','#2b8a3e','#c2255c','#0c8599'];
+const nice=m=>{const r=m/5,p=Math.pow(10,Math.floor(Math.log10(r))),f=r/p;return(f<=1?1:f<=2?2:f<=5?5:10)*p};
+function stress(host,items,orient){
+ const st={on:new Set(items.map(i=>i.n)),o:'xy'};
+ host.innerHTML=`<div class="chips" data-r="m" aria-label="בחירת חומרים"></div>${orient?'<div class="chips" data-r="o" aria-label="כיוון ההדפסה"></div>':''}<div class="cw"><svg viewBox="0 0 720 380" role="img" aria-label="גרף מאמץ־מעוות"></svg><div class="tip"></div></div><div class="sc"><table><thead></thead><tbody></tbody></table></div>`;
+ const sv=host.querySelector('svg'),tip=host.querySelector('.tip'),c1=host.querySelector('[data-r=m]');
+ const W=720,H=380,ml=56,mr=14,mt=14,mb=44,pw=W-ml-mr,ph=H-mt-mb;
+ const draw=()=>{
+  c1.innerHTML=items.map((i,k)=>`<button class="chip lg" aria-pressed="${st.on.has(i.n)}" data-n="${i.n}"><span style="color:${COL[k%6]}">●</span> ${i.n}</button>`).join('');
+  c1.querySelectorAll('.chip').forEach(e=>e.onclick=()=>{const n=e.dataset.n;st.on.has(n)?st.on.delete(n):st.on.add(n);draw()});
+  const D=items.filter(i=>st.on.has(i.n)).map(i=>{const p=i.get?i.get(st.o):i;return{n:i.n,c:COL[items.indexOf(i)%6],p,f:sig(p.E,p.su,p.eb,i.k||3.2)}});
+  if(!D.length){sv.innerHTML='';host.querySelector('thead').innerHTML='';host.querySelector('tbody').innerHTML='';return}
+  const xm=Math.max(...D.map(d=>d.p.eb))*1.08,ym=Math.max(...D.map(d=>d.p.su))*1.15;
+  const X=v=>ml+v/xm*pw,Y=v=>mt+ph-v/ym*ph;let g='';const sx=nice(xm),sy=nice(ym);
+  for(let v=0;v<=ym;v+=sy)g+=`<line x1="${ml}" x2="${W-mr}" y1="${Y(v)}" y2="${Y(v)}" stroke="#eef0f3"/><text x="${ml-8}" y="${Y(v)+4}" text-anchor="end" font-size="12" fill="#6b7280">${+v.toFixed(2)}</text>`;
+  for(let v=0;v<=xm;v+=sx)g+=`<text y="${H-mb+18}" x="${X(v)}" text-anchor="middle" font-size="12" fill="#6b7280">${+v.toFixed(2)}</text>`;
+  g+=`<line x1="${ml}" x2="${W-mr}" y1="${mt+ph}" y2="${mt+ph}" stroke="#9ca3af"/><text x="${ml+pw/2}" y="${H-4}" text-anchor="middle" font-size="13" fill="#374151">כמה החומר נמתח (%)</text><text transform="rotate(-90)" x="${-(mt+ph/2)}" y="14" text-anchor="middle" font-size="13" fill="#374151">כוח לשטח – מאמץ (MPa)</text>`;
+  D.forEach(d=>{let pts='';for(let i=0;i<=160;i++){const e=d.p.eb/100*i/160;pts+=(i?'L':'M')+X(e*100).toFixed(1)+' '+Y(d.f(e)).toFixed(1)}
+   g+=`<path d="${pts}" class="dr" pathLength="1" stroke="${d.c}" stroke-width="2.6" fill="none"/><circle cx="${X(d.p.eb)}" cy="${Y(d.f(d.p.eb/100))}" r="4.5" fill="#fff" stroke="${d.c}" stroke-width="2.5"/>`});
+  g+=`<line data-v y1="${mt}" y2="${H-mb}" stroke="#0f4c81" stroke-dasharray="4" opacity="0"/><rect data-o x="${ml}" y="${mt}" width="${pw}" height="${ph}" fill="transparent"/>`;
+  sv.innerHTML=g;const ov=sv.querySelector('[data-o]'),vl=sv.querySelector('[data-v]');
+  ov.onpointermove=ev=>{const r=sv.getBoundingClientRect();const px=(ev.clientX-r.left)/r.width*W;const e=(px-ml)/pw*xm;if(e<0)return;vl.setAttribute('x1',px);vl.setAttribute('x2',px);vl.setAttribute('opacity',1);
+   tip.style.display='block';tip.innerHTML=`<b>נמתח ${e.toFixed(1)}%</b><br>`+D.map(d=>`<span style="color:${d.c}">●</span> ${d.n}: ${e<=d.p.eb?d.f(e/100).toFixed(1)+' MPa':'נשבר'}`).join('<br>');
+   const cw=host.querySelector('.cw').getBoundingClientRect();let l=ev.clientX-cw.left+14;if(l>cw.width-180)l-=200;tip.style.left=Math.max(0,l)+'px';tip.style.top=Math.max(0,ev.clientY-cw.top-20)+'px'};
+  ov.onpointerleave=()=>{tip.style.display='none';vl.setAttribute('opacity',0)};
+  host.querySelector('thead').innerHTML='<tr><th>חומר</th><th>קשיחות – מודול (MPa)</th><th>חוזק מרבי (MPa)</th><th>נמתח עד שבר (%)</th></tr>';
+  host.querySelector('tbody').innerHTML=D.map(d=>`<tr><th><span style="color:${d.c}">●</span> ${d.n}</th><td>${d.p.E}${d.p.est?' *':''}</td><td>${d.p.su}${d.p.est?' *':''}</td><td>${d.p.eb}${d.p.est?' *':''}</td></tr>`).join('');
+ };
+ if(orient){const c2=host.querySelector('[data-r=o]');c2.innerHTML='<button class="chip" aria-pressed="true" data-o="xy">לאורך השכבות</button><button class="chip" aria-pressed="false" data-o="z">בין השכבות (החלק החלש)</button>';
+  c2.querySelectorAll('.chip').forEach(e=>e.onclick=()=>{st.o=e.dataset.o;c2.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===e));draw()})}
+ draw();
+}
+function chem(host,k){
+ const rows=CH[k].map(r=>[r[0],r[1].split(',').map(pv)]);
+ host.innerHTML=`<label for="sel-${k}">באיזה חומר החלק ייגע?</label><select id="sel-${k}" dir="ltr" style="text-align:left">${SOL.map((s,i)=>`<option value="${i}"${i===6?' selected':''}>${s}</option>`).join('')}</select><ul class="res" aria-live="polite"></ul>
+ <details><summary>הטבלה המלאה</summary><div class="sc"><table><thead><tr><th>חומר</th>${SOL.map(s=>`<th>${s}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr><th>${r[0]}</th>${r[1].map(c=>`<td class="${c.c}">${c.t}</td>`).join('')}</tr>`).join('')}</tbody></table></div></details>`;
+ const sel=host.querySelector('select'),ul=host.querySelector('.res');
+ const up=()=>{const i=+sel.value;ul.innerHTML=rows.map(r=>({n:r[0],v:r[1][i]})).sort((a,b)=>(a.v.n??99)-(b.v.n??99)).map(x=>`<li><span>${x.n}</span><span class="st ${x.v.c}">${x.v.s}${x.v.c!=='na'?` <small style="font-weight:400;color:var(--mut)">(${x.v.t})</small>`:''}</span></li>`).join('')};
+ sel.onchange=up;up();
+}
+function matFilter(host){
+ const c=host.querySelector('.chips'),cards=[...host.querySelectorAll('.mat')];
+ c.innerHTML=NEED.map((x,i)=>`<button class="chip" aria-pressed="${i===0}" data-t="${x[0]}">${x[1]}</button>`).join('');
+ c.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{c.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===b));const t=b.dataset.t;cards.forEach(m=>m.hidden=!(t==='all'||m.dataset.t.split(' ').includes(t)))});
+}
+/* ---------- full Bambu filament table ---------- */
+const GRP={PLA:'#e8590c',PETG:'#2b8a3e','ABS/ASA':'#e67700',PC:'#0c8599','ניילון (PA)':'#1864ab','הנדסי מתקדם':'#7048e8',TPU:'#c2255c','תמיכה':'#868e96'};
+const A1H='A1, H2C',H='H2C';
+// [group,name,E(MPa),UTS(MPa),Tg(°C),HDT@0.45(°C),printers,note]
+const FT=[
+['PLA','PLA Basic',2580,35,60,57,A1H,''],['PLA','PLA Basic Gradient',2580,36,60,57,A1H,'צבע מתחלף'],['PLA','PLA Matte',1960,30,61,58,A1H,'גימור מט'],['PLA','PLA Silk',1830,27,57,53,A1H,'מבריק'],['PLA','PLA Silk+',2130,33,57,60,A1H,'מבריק'],['PLA','PLA Silk Dual Color',null,null,null,null,A1H,'מבריק, שני צבעים'],['PLA','PLA Metal',2010,34,60,62,A1H,'מראה מתכתי'],['PLA','PLA Marble',2150,42,56,56,A1H,'מראה שיש'],['PLA','PLA Sparkle',1940,39,56,55,A1H,'נצנצים'],['PLA','PLA Galaxy',1540,26,52,55,A1H,'נצנצים'],['PLA','PLA Glow',2030,32,55,55,A1H,'זוהר בחושך'],['PLA','PLA Wood',2360,26,54,60,A1H,'מראה עץ'],['PLA','PLA Translucent',2880,55.4,54,60,A1H,'שקוף־למחצה'],['PLA','PLA Tough',2330,44,57,55,A1H,'עמיד למכות'],['PLA','PLA Tough+',1860,34.9,61,61,A1H,'עמיד למכות'],['PLA','PLA Aero',1350,24,55,53,A1H,'קל משקל (מוקצף)'],['PLA','PLA Lite',null,null,null,null,A1H,'חסכוני'],['PLA','PLA Pure',2481,51.5,55,60,A1H,'רכיבים מאושרים למגע במזון (לפי היצרן)'],['PLA','PLA‑CF',2790,38,63,55,H,'סיבי פחמן'],
+['PETG','PETG Basic',2780,51,69,71,A1H,''],['PETG','PETG HF',1810,34,66,69,A1H,'הדפסה מהירה'],['PETG','PETG Translucent',1420,33,70,74,A1H,'שקוף־למחצה'],['PETG','PETG Matte',3349,42.9,71,72.3,A1H,'גימור מט'],['PETG','PETG‑CF',2460,35,68,74,H,'סיבי פחמן'],
+['ABS/ASA','ABS',2200,33,null,87,H,''],['ABS/ASA','ABS‑GF',3160,36,null,99,H,'סיבי זכוכית'],['ABS/ASA','ASA',2450,37,null,100,H,'עמיד UV'],['ABS/ASA','ASA Aero',2010,32,null,85,H,'קל משקל'],['ABS/ASA','ASA‑CF',4200,34,null,110,H,'סיבי פחמן'],['ABS/ASA','ASA‑CF Matte',null,null,null,null,H,'סיבי פחמן, מט'],
+['PC','PC',2110,62,145,112,H,''],['PC','PC FR',1670,60,145,113,H,'מעכב בעירה'],
+['ניילון (PA)','PA6‑CF',4430,102,68,186,H,'סיבי פחמן'],['ניילון (PA)','PA6‑GF',2850,75,67,182,H,'סיבי זכוכית'],['ניילון (PA)','PAHT‑CF',3860,92,70,194,H,'עמיד לחום, סיבי פחמן'],['ניילון (PA)','PA12‑CF',null,null,null,null,H,'סיבי פחמן, סופג פחות לחות'],
+['הנדסי מתקדם','PET‑CF',4730,74,75,205,H,'סיבי פחמן'],['הנדסי מתקדם','PPA‑CF',11800,168,85,227,H,'סיבי פחמן, חום גבוה. בכיוון Z: 4300 MPa'],['הנדסי מתקדם','PPS‑CF',8230,87,100,264,H,'סיבי פחמן, מעכב בעירה ועמיד כימית. בכיוון Z: 2850 MPa'],
+['TPU','TPU 95A',9.2,29.6,null,null,A1H,'גמיש'],['TPU','TPU 95A HF',9.8,27.3,null,null,A1H,'גמיש, הדפסה מהירה'],['TPU','TPU 90A',5.3,12.5,null,null,A1H,'רך'],['TPU','TPU 85A',6.8,12.0,null,null,A1H,'רך מאוד'],['TPU','TPU for AMS',null,null,null,null,A1H,'גמיש־קשוח'],
+['תמיכה','PVA',null,null,null,null,H,'תמיכה מסיסה במים'],['תמיכה','Support for PLA / PLA‑PETG',null,null,null,null,A1H,'ממשק תמיכה נשלף'],['תמיכה','Support for ABS',null,null,null,null,H,'ממשק תמיכה נשלף'],['תמיכה','Support for PA/PET',null,null,null,null,H,'ממשק תמיכה נשלף']];
+function fullTable(host){
+ const st={g:'הכל',k:null,d:1};
+ const cols=[['name','חומר'],['E','מודול יאנג (MPa)'],['UTS','חוזק מתיחה (MPa)'],['Tg','Tg (°C)'],['HDT','HDT (°C)'],['pr','מדפסות']];
+ host.innerHTML=`<div class="chips" role="group" aria-label="סינון לפי משפחה"></div><div class="sc"><table class="ft"><thead><tr>${cols.map((c,i)=>`<th data-k="${c[0]}"${i&&i<5?'':''}><button class="sort">${c[1]}</button></th>`).join('')}</tr></thead><tbody></tbody></table></div>`;
+ const ch=host.querySelector('.chips');ch.innerHTML=['הכל',...Object.keys(GRP)].map(g=>`<button class="chip" aria-pressed="${g==='הכל'}" data-g="${g}">${g}</button>`).join('');
+ ch.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{st.g=b.dataset.g;ch.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===b));draw()});
+ host.querySelectorAll('th').forEach(th=>th.querySelector('button').onclick=()=>{const k=th.dataset.k;st.d=st.k===k?-st.d:(k==='name'||k==='pr'?1:-1);st.k=k;draw()});
+ const val=(r,k)=>({name:r[1],E:r[2],UTS:r[3],Tg:r[4],HDT:r[5],pr:r[6]})[k];
+ const f=v=>v==null?'—':v;
+ function draw(){let R=FT.filter(r=>st.g==='הכל'||r[0]===st.g);
+  if(st.k)R=[...R].sort((a,b)=>{const x=val(a,st.k),y=val(b,st.k);if(x==null&&y==null)return 0;if(x==null)return 1;if(y==null)return -1;return (typeof x==='string'?x.localeCompare(y):x-y)*st.d});
+  host.querySelectorAll('th').forEach(th=>{th.dataset.k===st.k?th.setAttribute('aria-sort',st.d>0?'ascending':'descending'):th.removeAttribute('aria-sort')});
+  host.querySelector('tbody').innerHTML=R.map(r=>`<tr><th><span class="grp" style="background:${GRP[r[0]]}">${r[0]}</span><br>${r[1]}${r[7]?`<br><small style="font-weight:400;color:var(--mut)">${r[7]}</small>`:''}</th><td class="n">${f(r[2])}${r[2]?`<span class="ebar" style="width:${Math.round(Math.log10(r[2])/Math.log10(12000)*60)}px;background:${GRP[r[0]]}"></span>`:''}</td><td class="n">${f(r[3])}</td><td class="n">${f(r[4])}</td><td class="n">${f(r[5])}</td><td>${r[6]}</td></tr>`).join('');}
+ draw();
+}
+/* ---------- diagrams for students ---------- */
+const svgW=(vb,inner,lab)=>`<svg viewBox="${vb}" role="img" aria-label="${lab}" font-family="Heebo,Arial" font-size="13">${inner}</svg>`;
+const GOOD='#2b8a3e',BADC='#c92a2a',PART='#1864ab',SUP='#f08c00';
+function layers(x0,y0,ang,n,w,col){let g='';const h=10,dx=Math.tan(ang*Math.PI/180)*h;for(let i=0;i<n;i++){g+=`<rect x="${x0+i*dx}" y="${y0-(i+1)*h}" width="${w}" height="${h-1.5}" rx="2" fill="${col}" opacity=".85"/>`}return g}
+const DG={
+angle:svgW('0 0 360 210',`<line x1="10" y1="190" x2="350" y2="190" stroke="#adb5bd" stroke-width="2"/>
+${layers(40,190,15,14,40,GOOD)}<text x="70" y="208" text-anchor="middle" fill="${GOOD}" font-weight="700">15° ✓</text>
+${layers(140,190,45,14,40,GOOD)}<text x="200" y="208" text-anchor="middle" fill="${GOOD}" font-weight="700">45° ✓ גבול</text>
+${layers(250,190,65,6,40,BADC)}<text x="300" y="208" text-anchor="middle" fill="${BADC}" font-weight="700">65° ✗</text>
+<path d="M262 128 q20 20 52 26" stroke="${BADC}" stroke-width="2" fill="none" stroke-dasharray="4 3"/><text x="306" y="120" text-anchor="middle" fill="${BADC}">השכבה נופלת</text>`,'שכבות בזוויות שונות מהאנך'),
+tab:svgW('0 0 380 230',`<g transform="translate(190,0)"><text x="95" y="18" text-anchor="middle" font-weight="700" fill="${BADC}">לפני: זיז "מרחף"</text>
+<rect x="40" y="40" width="40" height="160" fill="${PART}" opacity=".85" rx="2"/><rect x="80" y="40" width="80" height="24" fill="${PART}" opacity=".85" rx="2"/>
+<rect x="82" y="66" width="76" height="134" fill="${SUP}" opacity=".25"/>${Array.from({length:7},(_,i)=>`<line x1="${88+i*11}" y1="66" x2="${88+i*11}" y2="200" stroke="${SUP}" stroke-width="2"/>`).join('')}
+<text x="120" y="140" text-anchor="middle" fill="#a35400" font-weight="700">תמיכה</text>
+<line x1="20" y1="200" x2="175" y2="200" stroke="#adb5bd" stroke-width="2"/></g>
+<g transform="translate(-190,0)"><text x="285" y="18" text-anchor="middle" font-weight="700" fill="${GOOD}">אחרי: פאזה 45° מתחת</text>
+<rect x="230" y="40" width="40" height="160" fill="${PART}" opacity=".85" rx="2"/><rect x="270" y="40" width="80" height="24" fill="${PART}" opacity=".85" rx="2"/>
+<polygon points="270,64 350,64 270,144" fill="${GOOD}" opacity=".75"/>
+<path d="M300 64 a30 30 0 0 1 -9 21" fill="none" stroke="#fff" stroke-width="2"/><text x="318" y="96" fill="${GOOD}" font-weight="700">45°</text>
+<line x1="210" y1="200" x2="365" y2="200" stroke="#adb5bd" stroke-width="2"/></g>`,'זיז היוצא מעמוד: עם תמיכה לעומת פאזה של 45 מעלות'),
+gusset:svgW('0 0 380 210',`<g transform="translate(185,0)"><text x="95" y="18" text-anchor="middle" font-weight="700" fill="${SUP}">זיז ארוך: פאזה מלאה כבדה</text>
+<rect x="30" y="40" width="34" height="150" fill="${PART}" opacity=".85"/><rect x="64" y="40" width="120" height="20" fill="${PART}" opacity=".85"/><polygon points="64,60 184,60 64,180" fill="${SUP}" opacity=".5"/>
+<line x1="15" y1="190" x2="190" y2="190" stroke="#adb5bd" stroke-width="2"/></g>
+<g transform="translate(-185,0)"><text x="285" y="18" text-anchor="middle" font-weight="700" fill="${GOOD}">פתרון: צלע (Gusset) ב־45°</text>
+<rect x="215" y="40" width="34" height="150" fill="${PART}" opacity=".85"/><rect x="249" y="40" width="120" height="20" fill="${PART}" opacity=".85"/><polygon points="249,60 330,60 249,141" fill="${GOOD}" opacity=".35"/><path d="M249 141 L330 60" stroke="${GOOD}" stroke-width="6"/>
+<line x1="200" y1="190" x2="375" y2="190" stroke="#adb5bd" stroke-width="2"/></g>`,'זיז ארוך עם צלע חיזוק'),
+island:svgW('0 0 360 200',`<rect x="30" y="140" width="300" height="40" fill="${PART}" opacity=".85"/><g transform="translate(170,0)"><rect x="60" y="40" width="60" height="18" fill="${BADC}" opacity=".85"/><text x="90" y="32" text-anchor="middle" fill="${BADC}" font-weight="700">אי מרחף ✗</text>
+<path d="M70 62 q8 20 -4 40 q-8 20 10 34" stroke="${BADC}" fill="none" stroke-width="2" stroke-dasharray="3 3"/></g>
+<g transform="translate(-170,0)"><rect x="230" y="40" width="60" height="18" fill="${GOOD}" opacity=".85"/><polygon points="230,58 290,58 270,140 250,140" fill="${GOOD}" opacity=".4"/><text x="260" y="32" text-anchor="middle" fill="${GOOD}" font-weight="700">מחובר בשיפוע ✓</text></g>
+<line x1="10" y1="180" x2="350" y2="180" stroke="#adb5bd" stroke-width="2"/>`,'חלק שמתחיל באוויר לעומת חלק מחובר'),
+hole:svgW('0 0 360 170',`<g transform="translate(180,0)"><circle cx="90" cy="95" r="45" fill="none" stroke="${PART}" stroke-width="6"/><path d="M60 62 q30 22 60 0" stroke="${BADC}" stroke-width="4" fill="none"/><text x="90" y="160" text-anchor="middle" fill="${BADC}" font-weight="700">עגול: התקרה "נוזלת"</text></g>
+<g transform="translate(-180,0)"><path d="M238.2 63.2 L270 31.4 L301.8 63.2 A45 45 0 1 1 238.2 63.2 Z" fill="none" stroke="${GOOD}" stroke-width="6" stroke-linejoin="round"/><text x="270" y="160" text-anchor="middle" fill="${GOOD}" font-weight="700">טיפה: נקי בלי תמיכה</text></g>
+<line x1="20" y1="10" x2="340" y2="10" stroke="#fff"/>`,'חור אופקי עגול לעומת חור בצורת טיפה'),
+edge:svgW('0 0 360 170',`<g transform="translate(180,0)"><path d="M30 30 H140 V140 H70 A40 40 0 0 1 30 100 Z" fill="${PART}" opacity=".85"/><path d="M70 140 A40 40 0 0 1 30 100" stroke="${BADC}" stroke-width="4" fill="none"/><text x="85" y="162" text-anchor="middle" fill="${BADC}" font-weight="700">רדיוס בתחתית ✗</text></g>
+<g transform="translate(-180,0)"><path d="M210 30 H320 V140 H250 L210 100 Z" fill="${PART}" opacity=".85"/><path d="M250 140 L210 100" stroke="${GOOD}" stroke-width="4"/><text x="265" y="162" text-anchor="middle" fill="${GOOD}" font-weight="700">פאזה 45° ✓</text></g>
+<line x1="10" y1="140" x2="350" y2="140" stroke="#adb5bd" stroke-width="2"/>`,'פינה תחתונה: רדיוס לעומת פאזה'),
+aniso:svgW('0 0 360 180',`${Array.from({length:10},(_,i)=>`<rect x="90" y="${30+i*13}" width="180" height="11" rx="3" fill="${PART}" opacity="${.55+(i%2)*.25}"/>`).join('')}
+<path d="M60 95 H20 M300 95 H340" stroke="${GOOD}" stroke-width="4" marker-end="url(#ag)" marker-start="url(#ag)"/>
+<defs><marker id="ag" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="${GOOD}"/></marker><marker id="ab" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="${BADC}"/></marker></defs>
+<text x="40" y="85" text-anchor="middle" fill="${GOOD}" font-weight="700">חזק</text>
+<path d="M180 25 V5 M180 165 V178" stroke="${BADC}" stroke-width="4"/><text x="215" y="16" fill="${BADC}" font-weight="700">חלש – בין השכבות</text>`,'כיווניות החוזק בחלק מודפס')};
+/* ---------- extra diagrams ---------- */
+DG.flex=svgW('0 0 380 235',`<text x="190" y="18" text-anchor="middle" font-weight="700" fill="#495057">קורה בהדפסה אחת: קשיח – גמיש – קשיח</text>
+<rect x="30" y="40" width="130" height="22" rx="3" fill="${PART}"/><rect x="160" y="40" width="50" height="22" fill="#c2255c" opacity=".85"/>${[0,1,2,3].map(i=>`<path d="M${168+i*11} 40 v22" stroke="#fff" stroke-width="2" opacity=".6"/>`).join('')}<rect x="210" y="40" width="140" height="22" rx="3" fill="${PART}"/>
+<text x="95" y="80" text-anchor="middle" fill="${PART}" font-weight="700">PETG קשיח</text><text x="185" y="80" text-anchor="middle" fill="#c2255c" font-weight="700">TPU</text><text x="280" y="80" text-anchor="middle" fill="${PART}" font-weight="700">PETG קשיח</text>
+<rect x="30" y="190" width="130" height="22" rx="3" fill="${PART}"/><path d="M160 201 Q 190 201 205 186" stroke="#c2255c" stroke-width="22" fill="none" opacity=".85"/>
+<g transform="translate(203,188) rotate(-25)"><rect x="0" y="-11" width="140" height="22" rx="3" fill="${PART}"/></g>
+<path d="M330 96 q24 20 16 46" stroke="#868e96" stroke-width="2" fill="none" marker-end="url(#fa)"/><defs><marker id="fa" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#868e96"/></marker></defs>
+<text x="95" y="232" text-anchor="middle" fill="#495057">מתכופפת רק באזור הגמיש</text>`,'קורה עם מקטע גמיש מ־TPU, ישרה ומכופפת');
+DG.insert=svgW('0 0 360 190',`<rect x="60" y="90" width="240" height="80" rx="4" fill="${PART}" opacity=".85"/><rect x="160" y="90" width="40" height="50" fill="#fff"/>
+<g transform="translate(0,-10)"><rect x="163" y="30" width="34" height="46" rx="3" fill="#e0a526" stroke="#a36f00" stroke-width="2"/>${[0,1,2,3,4].map(i=>`<path d="M163 ${36+i*9} l34 5" stroke="#a36f00" stroke-width="1.5"/>`).join('')}<circle cx="180" cy="53" r="8" fill="#fff" stroke="#a36f00" stroke-width="2"/></g>
+<path d="M180 72 v14" stroke="#868e96" stroke-width="2" marker-end="url(#ia)"/><defs><marker id="ia" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#868e96"/></marker></defs>
+<text x="235" y="50" fill="#a36f00" font-weight="700">אינסרט פליז</text><text x="235" y="68" fill="#495057">מוחדר בחום לחור</text>`,'הטמעת אינסרט פליז בחלק מודפס');
+/* ---------- material questionnaire ---------- */
+const QM=[// name,E,UTS,HDT,cost,tags,why
+['PLA Basic',2580,35,57,1,'look','חסכוני, מדויק ועם גימור יפה. זוחל תחת עומס קבוע – לא לחלקים נושאי עומס לאורך זמן.'],
+['PLA Matte',1960,30,58,1,'look','גימור מט ייצוגי שמסתיר קווי שכבה.'],
+['PETG Basic',2780,51,71,1,'water','חזק וקשוח לשימוש יומיומי, עמיד במים.'],
+['PETG‑CF',2460,35,74,2,'water','PETG עם סיבי פחמן – יציב ובגימור מט.'],
+['ABS',2200,33,87,1,'','עמיד לחום בינוני ולמכות.'],
+['ASA',2450,37,100,1,'uv water','עמיד לשמש ולמזג אוויר.'],
+['ASA‑CF',4200,34,110,2,'uv water','ASA קשיח במיוחד, לשימוש בחוץ.'],
+['PC',2110,62,112,2,'water','חזק מאוד ועמיד לחום ולמכות.'],
+['PC FR',1670,60,113,2,'fr water','פוליקרבונט מעכב בעירה.'],
+['PA6‑CF',4430,102,186,3,'chem','ניילון עם סיבי פחמן – חזק, קשיח ועמיד לשמנים. סופג לחות מהאוויר.'],
+['PAHT‑CF',3860,92,194,3,'chem','ניילון עמיד לחום גבוה. סופג לחות מהאוויר.'],
+['PET‑CF',4730,74,205,3,'water chem uv','קשיח מאוד, יציב בלחות ובחום.'],
+['PPA‑CF',11800,168,227,3,'chem','הקשיח והחזק ביותר ברשימה – לעומסים כבדים ולחום גבוה.'],
+['PPS‑CF',8230,87,264,3,'chem fr water','עמידות כימית וחום יוצאות דופן, מעכב בעירה.']];
+const QQ=[['flex','מה הגמישות הנדרשת?',[['rigid','קשיח'],['flex','גמיש (כמו גומי)'],['mix','קשיח עם אזור גמיש']]],
+['temp','באיזו טמפרטורה החלק יעבוד?',[['50','טמפרטורת החדר'],['70','עד 60°C'],['100','עד 90°C'],['150','מעל 100°C']]],
+['load','כמה עומס על החלק?',[['low','נמוך – מודל, כיסוי'],['mid','בינוני – תושבת, מחזיק'],['high','גבוה – חלק מכני נושא עומס']]],
+['env','באיזו סביבה?',[['in','בתוך מבנה'],['uv','בחוץ – שמש וגשם'],['water','מים או לחות'],['chem','שמנים או כימיקלים']]],
+['sp','דרישה מיוחדת?',[['none','אין'],['fr','מעכב בעירה'],['stiff','קשיחות מרבית'],['look','מראה ייצוגי']]]];
+function quiz(host){
+ const a={flex:'rigid',temp:'50',load:'low',env:'in',sp:'none'};
+ host.innerHTML=QQ.map(q=>`<div class="q"><b>${q[1]}</b><div class="chips" role="radiogroup" aria-label="${q[1]}">${q[2].map(o=>`<button class="chip" role="radio" aria-checked="${a[q[0]]===o[0]}" aria-pressed="${a[q[0]]===o[0]}" data-q="${q[0]}" data-v="${o[0]}">${o[1]}</button>`).join('')}</div></div>`).join('')+'<div id="qres" aria-live="polite"></div>';
+ host.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{a[b.dataset.q]=b.dataset.v;host.querySelectorAll(`[data-q="${b.dataset.q}"]`).forEach(x=>{x.setAttribute('aria-pressed',x===b);x.setAttribute('aria-checked',x===b)});up()});
+ const card=(n,E,U,H,w)=>`<div class="qr"><h3>${n}</h3><p>${w}</p><div class="qv"><span>מודול יאנג <b>${E??'—'}</b> MPa</span><span>חוזק מתיחה <b>${U??'—'}</b> MPa</span><span>HDT <b>${H??'—'}</b>°C</span></div></div>`;
+ function up(){const r=host.querySelector('#qres');
+  if(a.flex==='flex'){r.innerHTML=`<div class="rec"><div class="kick">המלצה</div>${card('TPU 95A HF',9.8,27.3,null,'גמיש וחזק – מתאים לרוב החלקים הגמישים.')}${card('TPU 85A',6.8,12,null,'רך יותר – לאטמים ולרפידות.')}<p class="note" style="margin:10px 0 0">חלק גמיש לגמרי מדפיסים מ־TPU. אם רק חלק מהחלק צריך להיות גמיש – כדאי לבחור „קשיח עם אזור גמיש”.</p></div>`;return}
+  let C=QM.filter(m=>m[3]>=+a.temp);
+  if(a.load==='mid')C=C.filter(m=>m[2]>=33);if(a.load==='high')C=C.filter(m=>m[2]>=60||m[1]>=4000);
+  if(a.env!=='in')C=C.filter(m=>m[5].split(' ').includes(a.env));
+  if(a.sp==='fr')C=C.filter(m=>m[5].includes('fr'));
+  if(a.sp==='stiff')C.sort((x,y)=>y[1]-x[1]);else if(a.sp==='look')C.sort((x,y)=>(y[5].includes('look')-x[5].includes('look'))||x[4]-y[4]);else C.sort((x,y)=>x[4]-y[4]||y[2]-x[2]);
+  C=C.slice(0,3);
+  r.innerHTML=`<div class="rec"><div class="kick">חומרים מומלצים</div>${C.length?C.map(m=>card(m[0],m[1],m[2],m[3],m[6])).join(''):'<p>אין התאמה ישירה לשילוב הדרישות – מומלץ להתייעץ במייל.</p>'}${a.flex==='mix'&&C.length?'<p class="note" style="margin:10px 0 0"><b>+ TPU לאזור הגמיש</b> – ב־H2C אפשר לשלב את החומר הקשיח עם TPU באותה הדפסה.</p>':''}<p class="note" style="margin:10px 0 0">ההמלצה ראשונית ומבוססת על נתוני היצרן. <a href="#fdm-materials">לטבלת כל החומרים</a>. לבחירה סופית – אפשר להתייעץ במייל.</p></div>`}
+ up();
+}
+/* ---------- page parts ---------- */
+const dots=(n,l)=>`<dt>${l}</dt><dd class="dots" style="margin:0" role="img" aria-label="${l}: ${n} מתוך 5">${[1,2,3,4,5].map(i=>`<i class="${i<=n?'on':''}"></i>`).join('')}</dd>`;
+const band=()=>`<section><div class="wrap"><div class="band rv"><div><h2>יש רעיון או קובץ?</h2><p>אפשר לפנות במייל ולקבל המלצה על השיטה והחומר המתאימים.</p></div><a class="btn" href="#contact">יצירת קשר</a></div></div></section>`;
+const CLS={fdm:'fdm',sla:'sla',sls:'sls',scan:'grn',laser:'pnk'};
+const prn=k=>{const p=P[k];return`<div class="prn rv c-${CLS[p.t]}"><div class="pa">${ART[p.art]}</div><div><h3>${p.n}<span class="tag">${TAG[p.t]}</span></h3><div class="size">${p.sl}: ${p.size}</div><p>${p.s}</p><a href="#${p.link||k}">${p.link?'לפרטים על השירות':'עוד על המדפסת'} ←</a></div></div>`};
+/* ---------- pages ---------- */
+const pages={
+home:{t:'מעבדת תלת־ממד',h:()=>`
+<section class="hero"><div class="wrap hero-grid"><div class="rv"><div class="kick">המעבדה של פרופ׳ אמיר שפירא · אוניברסיטת בן־גוריון בנגב</div><h1>מרעיון לחלק אמיתי</h1><p class="lead">שירותי הדפסה בתלת־ממד, סריקה בתלת־ממד וחיתוך לייזר. אפשר להגיע עם רעיון, שרטוט או קובץ – ולקבל המלצה על השיטה והחומר המתאימים, ואת החלק המוכן.</p><div class="btns"><a class="btn" href="#contact">יצירת קשר</a><a class="btn ghost" href="#students">לסטודנטים</a></div></div><div class="hero-art rv">${ART.hero}</div></div></section>
+<section class="alt"><div class="wrap"><div class="sec-h rv"><h2>מה אפשר להכין</h2><p>כמה דוגמאות לעבודות שמתבצעות במעבדה.</p></div><div class="ex">${EX.map((e,i)=>`<div class="rv c-${['fdm','sla','sls','grn','pnk','yel','sla','fdm','pnk'][i]}"><div class="ic">${IC[e[0]]}</div><h3>${e[1]}</h3><p>${e[2]}</p></div>`).join('')}</div></div></section>
+<section><div class="wrap"><div class="sec-h rv"><h2>השירותים</h2></div><div class="svc rv">${SV.map(s=>`<a href="#${s[0]}" class="c-${s[4]}"><div class="ic">${IC[s[3]]}</div><div class="t"><h3>${s[1]}</h3><p>${s[2]}</p></div><span class="ar" aria-hidden="true">←</span></a>`).join('')}</div></div></section>
+<section class="alt"><div class="wrap"><div class="sec-h rv"><h2>איך זה עובד</h2></div><ol class="steps">${[['שולחים פנייה במייל','קובץ, שרטוט, תמונה או רק רעיון.'],['מקבלים המלצה','על השיטה והחומר שמתאימים לשימוש.'],['ביצוע במעבדה','הדפסה, סריקה או חיתוך.'],['איסוף','בתיאום – בניין 57, מעבדה 2.']].map((s,i)=>`<li class="rv c-${['fdm','sla','sls','grn'][i]}"><h3>${s[0]}</h3><p>${s[1]}</p></li>`).join('')}</ol></div></section>
+<section><div class="wrap"><div class="sec-h rv"><h2>הציוד במעבדה</h2><p>שש מדפסות בשלוש שיטות הדפסה, סורק תלת־ממד ומכונת חיתוך לייזר.</p></div>${Object.keys(P).map(prn).join('')}</div></section>${band()}`},
+contact:{t:'יצירת קשר',h:()=>`<div class="wrap page"><div class="rv"><h1>יצירת קשר</h1><p class="lead">הפניות מתקבלות במייל. כדאי לתאר מה צריך ולמה החלק ישמש – כך אפשר להמליץ על הפתרון המתאים.</p></div>
+<div class="contact" style="margin-top:28px"><div class="rv"><ul class="cinfo">
+<li><span class="ic">${IC.mail}</span><div><b>מייל</b><a class="mail" href="mailto:${EMAIL}">${EMAIL}</a><br><button class="chip" id="cp" style="margin-top:8px">העתקת הכתובת</button></div></li>
+<li><span class="ic">${IC.pin}</span><div><b>כתובת</b>בניין 57, מעבדה 2<br>אוניברסיטת בן־גוריון בנגב, באר שבע<br><a href="https://www.google.com/maps/search/?api=1&query=Ben-Gurion+University+of+the+Negev+Building+57" target="_blank" rel="noopener">ניווט במפה ←</a></div></li></ul>
+<div class="box" style="margin-top:24px"><h3>מה כדאי לצרף</h3>${L(['קובץ (STEP, 3MF, STL או OBJ), שרטוט או תמונה','למה החלק ישמש – עוזר לבחור חומר','כמות','מתי צריך את החלק'])}</div></div>
+<form class="rv" id="cf" novalidate><h2>שליחת פנייה</h2><p style="color:var(--mut);margin:0">הכפתור פותח את תוכנת המייל עם ההודעה מוכנה – נשאר רק לצרף קבצים ולשלוח.</p>
+<label for="f-n">שם</label><input id="f-n" autocomplete="name">
+<label for="f-s">שירות</label><select id="f-s"><option>לא ידוע – מבקש/ת המלצה</option>${SV.map(s=>`<option>${s[1]}</option>`).join('')}</select>
+<label for="f-m">מה צריך?</label><textarea id="f-m" rows="6" placeholder="למשל: מארז ללוח Arduino, בערך 10×6×4 ס״מ, 2 יחידות, לשימוש בחוץ"></textarea>
+<div class="btns"><button class="btn" type="submit">פתיחת המייל לשליחה</button></div></form></div></div>`},
+scan:{t:'סריקה בתלת־ממד',h:()=>`<div class="wrap page c-grn"><div class="cols" style="align-items:center"><div class="rv"><div class="crumb">שירות</div><h1>סריקה בתלת־ממד</h1><div class="size">הסורק: EinScan Pro HD</div><p class="lead">סריקה בתלת־ממד הופכת חפץ אמיתי לקובץ דיגיטלי. הקובץ מתאר את הצורה המדויקת של פני השטח – ואפשר למדוד אותו, לשנות אותו במחשב או להדפיס ממנו עותק.</p></div><div class="rv tc-art" style="max-width:360px;border-radius:20px;padding:18px">${ART.scan}</div></div>
+<div class="cols" style="margin-top:44px"><div class="rv"><h2>איך זה עובד</h2><p>הסורק מקרין על החפץ תבנית של אור ומצלם אותה בשתי מצלמות. מהעיוות של התבנית על פני החפץ, התוכנה מחשבת את המרחק לכל נקודה. אחרי שסורקים את החפץ מכל הצדדים, התוכנה מחברת את כל הצילומים לקובץ אחד שלם.</p>
+<h3>שתי דרכי סריקה</h3><ul><li><b>סריקה על שולחן מסתובב</b> – לחפצים קטנים. החפץ מסתובב והסורק עומד במקום. זה המצב המדויק ביותר: עד 0.04 מ״מ לפי היצרן.</li><li><b>סריקה ידנית</b> – לחפצים גדולים יותר. מעבירים את הסורק ביד מסביב לחפץ. הדיוק: 0.045 מ״מ ועוד 0.3 מ״מ לכל מטר של גודל החפץ, בעבודה עם מדבקות סימון.</li></ul>
+<p>שטח הסריקה בצילום בודד: בין 21 × 16 ל־31 × 24 ס״מ. חפצים גדולים יותר נסרקים בכמה צילומים שמתחברים יחד.</p></div>
+<div class="rv"><h2>במה זה עוזר</h2><ul class="good"><li>שחזור חלק שנשבר או שאין לו שרטוט</li><li>תכנון חלק חדש שצריך להתאים לחפץ קיים</li><li>מדידה והשוואה בין חלק מיוצר למודל המקורי</li><li>תיעוד חפצים, דגימות ומודלים למחקר</li></ul>
+<div class="box" style="margin-top:20px"><h3>מה מקבלים</h3><p style="margin:0">קובץ רשת משולשים (STL או OBJ) שמתאר את פני השטח. חשוב לדעת: זה לא קובץ CAD עם מידות פרמטריות. כדי לשנות את החלק בתוכנת תכנון, משתמשים בסריקה כבסיס ומשרטטים מעליה.</p></div></div></div>
+<div class="cols" style="margin-top:36px"><div class="rv"><h2>מה קשה לסרוק</h2><ul class="less"><li>משטחים שקופים, מבריקים מאוד או שחורים מאוד – לפעמים אפשר לרסס אותם בתרסיס מט זמני</li><li>פרטים דקים מאוד כמו שערות או חוטים</li><li>חורים עמוקים וצרים שהאור לא מגיע אליהם</li></ul></div>
+<div class="rv box"><h3>מה להביא</h3>${L(['את החפץ עצמו (או לתאם סריקה במקום)','מה רוצים לעשות עם הקובץ','גודל משוער של החפץ'])}</div></div></div>${band()}`},
+laser:{t:'חיתוך לייזר',h:()=>`<div class="wrap page c-pnk"><div class="cols" style="align-items:center"><div class="rv"><div class="crumb">שירות</div><h1>חיתוך וחריטה בלייזר</h1><div class="size">המכונה: FLUX HEXA · שטח עבודה 73 × 41 ס״מ</div><p class="lead">קרן לייזר חזקה ומרוכזת חותכת לוחות או חורטת עליהם, לפי שרטוט מהמחשב. התוצאה מדויקת מאוד, עם קצוות נקיים.</p></div><div class="rv tc-art" style="max-width:360px;border-radius:20px;padding:18px">${ART.laser}</div></div>
+<div class="cols" style="margin-top:44px"><div class="rv"><h2>איך זה עובד</h2><p>ב־FLUX HEXA יש שפופרת לייזר CO₂ בהספק 60 ואט. עדשה מרכזת את הקרן לנקודה קטנה מאוד, והיא מאדה את החומר בדיוק לאורך הקו בשרטוט. מצלמה מעל משטח העבודה מציגה את הלוח על המסך, כך שאפשר למקם את השרטוט בדיוק על החומר, ופוקוס אוטומטי מכוון את הגובה לפי עובי הלוח.</p>
+<h3>חיתוך לעומת חריטה</h3><ul><li><b>חיתוך</b> – הלייזר עובר לאורך קווים וחותך את הלוח עד הסוף. מתאים לחלקים, למארזים ולתבניות.</li><li><b>חריטה</b> – הלייזר „צובע” שטח ושורף רק את השכבה העליונה. מתאים לטקסט, לוגו ותמונות.</li></ul></div>
+<div class="rv"><h2>במה זה עוזר</h2><ul class="good"><li>שלטים וחריטה של טקסט ולוגו</li><li>חלקים שטוחים ומארזים מלוחות שמשתלבים זה בזה</li><li>תבניות ושבלונות</li><li>דגמים אדריכליים</li></ul>
+<div class="box" style="margin-top:20px"><h3>חומרים</h3><p style="margin:.2em 0"><b class="okc">מתאים:</b> עץ ודיקט, MDF, אקריליק (פרספקס), קרטון ונייר, עור, בד וגומי ייעודי.</p><p style="margin:.2em 0"><b class="okc">חריטה בלבד:</b> זכוכית, אבן, אלומיניום מאולגן.</p><p style="margin:.2em 0"><b class="bad">אסור:</b> PVC וויניל – משחררים גז רעיל ומזיק למכונה. מתכת אי אפשר לחתוך.</p></div></div></div>
+<div class="cols" style="margin-top:36px"><div class="rv"><h2>הכנת קובץ</h2><ul><li>קובץ וקטורי: DXF, SVG, AI או PDF, בקנה מידה 1:1 ובמילימטרים.</li><li>קווים דקים = חיתוך; שטחים מלאים = חריטה.</li><li>הלייזר „אוכל” כ־0.1–0.2 מ״מ מהחומר לאורך הקו. בחלקים שצריכים להיכנס זה בזה בלחיצה – כדאי לקחת את זה בחשבון.</li><li>אפשר גם לשלוח שרטוט או תמונה, ולהכין מהם קובץ.</li></ul></div>
+<div class="rv box"><h3>מה לשלוח</h3>${L(['קובץ או שרטוט','סוג החומר והעובי','כמות'])}<p style="margin:0;color:var(--mut);font-size:.95rem">עובי החיתוך המרבי תלוי בחומר – לבירור במייל.</p></div></div></div>${band()}`}};
+for(const t in T){const x=T[t];
+ pages[t]={t:`${x.n} – ${x.p}`,h:()=>`<div class="wrap page c-${t}"><div class="cols" style="align-items:center"><div class="rv"><div class="crumb">${x.n}</div><h1>${x.p}</h1><p class="lead">${x.how}</p><div class="btns"><a class="btn" href="#${t}-materials">${x.mt}</a><a class="btn ghost" href="#contact">יצירת קשר</a></div></div><div class="rv tc-art" style="max-width:380px;border-radius:20px;padding:18px">${ART[t]}</div></div>
+ <div class="cols" style="margin-top:48px"><div class="rv"><h2>מתאים במיוחד ל</h2><ul class="good">${x.good.map(i=>`<li>${i}</li>`).join('')}</ul></div><div class="rv"><h2>פחות מתאים ל</h2><ul class="less">${x.less.map(i=>`<li>${i}</li>`).join('')}</ul></div></div>
+ <div class="box rv" style="margin-top:40px"><h3>דוגמאות</h3><p style="margin:0;color:var(--mut)">${x.ex.join(' · ')}</p></div>
+ <h2 class="rv" style="margin-top:56px">המדפסות במעבדה</h2>${PR.filter(k=>P[k].t===t).map(prn).join('')}</div>${band()}`};}
+for(const k of PR){const p=P[k],x=T[p.t];pages[k]={t:p.n,h:()=>`<div class="wrap page c-${p.t}"><div class="cols" style="align-items:center"><div class="rv"><div class="crumb"><a href="#${p.t}">${x.n} – ${x.p}</a> › המדפסות במעבדה</div><h1>${p.n}</h1><div class="size">${p.sl}: ${p.size}</div><p class="lead">${p.lead}</p></div><div class="rv tc-art" style="max-width:340px;border-radius:20px;padding:18px">${ART[p.art]}</div></div>
+<div class="cols" style="margin-top:40px"><div class="rv"><h2>מתאימה במיוחד ל</h2><ul class="good">${p.best.map(i=>`<li>${i}</li>`).join('')}</ul></div><div class="rv box"><h3>כדאי לדעת</h3>${L(p.know)}</div></div>
+<p class="rv" style="margin-top:28px"><a href="#${p.t}-materials">${x.mt} ←</a></p></div>${band()}`};}
+pages['fdm-materials']={t:'סוגי פלסטיק',h:()=>`<div class="wrap page c-fdm"><div class="rv"><div class="crumb"><a href="#fdm">FDM – הדפסה בחוט פלסטיק</a></div><h1>סוגי פלסטיק</h1><p class="lead">סינון לפי מה שהחלק צריך מציג את החומרים המתאימים. לבחירה מדויקת – אפשר לפנות במייל ולתאר למה החלק ישמש.</p></div>
+<div id="mf"><div class="chips rv" role="group" aria-label="סינון לפי צורך"></div><div class="mats">${FM.map((m,i)=>`<article class="mat rv c-${['fdm','pnk','ac','grn','grn','sla','yel','yel','sls','pnk','ac','fdm','sls','sla','fdm'][i]}" data-t="${m[6]}"><h3>${m[0]}</h3><div class="nick">${m[1]}</div><p>${m[2]}</p><p><b>מתאים ל:</b> ${m[3]}</p><dl class="rate">${dots(m[4][0],'חוזק')}${dots(m[4][1],'גמישות')}${dots(m[4][2],'עמידות לחום')}${dots(m[4][3],'שימוש בחוץ')}</dl><p class="pr">מדפסות: ${m[5]}</p></article>`).join('')}</div></div>
+<p class="note">הדירוגים הם הערכה כללית להשוואה בין החומרים, ולא נתון הנדסי. מלאי החומרים משתנה – לבירור זמינות במייל.</p>
+<h2 class="rv" id="ft-h" style="margin-top:56px">כל החומרים של Bambu Lab – נתונים טכניים</h2><p class="rv" style="color:var(--mut)">כל קווי הפילמנט של Bambu Lab, עם נתונים מגיליונות הנתונים הטכניים של היצרן. אפשר למיין לפי כל עמודה ולסנן לפי משפחה. <b>מודול יאנג</b> = קשיחות (כמה החומר מתנגד לעיוות); <b>Tg</b> = טמפרטורת מעבר זכוכית (שם החומר מתחיל להתרכך); <b>HDT</b> = הטמפרטורה שבה מוט סטנדרטי מתכופף תחת עומס קל של 0.45 MPa.</p><div id="ft" class="rv"></div><p class="note">ערכים בכיוון XY (לאורך השכבות), לפי ISO 527 ו־ISO 75 כפי שמופיעים בגיליונות Bambu Lab. „—” = לא מופיע בגיליון. בחומרים עם סיבי פחמן המודול בכיוון XY גבוה במיוחד, כי הסיבים מסתדרים לאורך קו ההדפסה; בכיוון Z (בין השכבות) הוא נמוך בהרבה. הרשימה היא קטלוג היצרן – לא כל החומרים במלאי.</p>
+<div class="cols" style="margin-top:48px"><div class="rv"><h2>מה זה CF – סיבי פחמן?</h2><p>חומרים שמסתיימים ב־CF מכילים סיבי פחמן קצרים. הם הופכים את החלק לקשיח יותר, יציב יותר ובעל גימור מט יפה. מצד שני, החלק פחות גמיש ועלול להישבר במכה חדה במקום להתכופף. GF הם סיבי זכוכית – פחות קשיחים, ופחות שבירים.</p></div>
+<div class="rv"><h2>מה זה FR – מעכב בעירה?</h2><p>חומרי FR מכילים תוספים שמקשים על האש להתפשט. מקובל לדרג אותם לפי התקן <b>UL 94</b>, שבודק מה קורה כשמדליקים דוגמה של החומר:</p></div></div>
+<div class="sc rv"><table><thead><tr><th>דירוג</th><th>מה זה אומר</th></tr></thead><tbody><tr><th>V‑0</th><td>הדירוג הטוב ביותר. האש כבה תוך 10 שניות, ולא נופלות טיפות בוערות.</td></tr><tr><th>V‑1</th><td>האש כבה תוך 30 שניות, ולא נופלות טיפות בוערות.</td></tr><tr><th>V‑2</th><td>האש כבה תוך 30 שניות, אבל עלולות ליפול טיפות בוערות.</td></tr><tr><th>HB</th><td>הדירוג הבסיסי: החומר בוער לאט כשהוא מונח אופקית.</td></tr></tbody></table></div>
+<p class="note">הדירוג ניתן לחומר בעובי מסוים, ולא לכל חלק מודפס. אם החלק צריך לעמוד בתקן – יש לציין זאת בפנייה.</p>
+<details class="rv"><summary>למתקדמים: השוואת חוזק בגרף מאמץ־מעוות</summary><div><p style="color:var(--mut)">הגרף מראה כמה כוח החומר מחזיק (למעלה) וכמה הוא נמתח (ימינה) עד שהוא נשבר (העיגול). עקומה גבוהה = חזק; עקומה ארוכה = נמתח לפני שבירה. בחלק מודפס, הכיוון „בין השכבות” חלש יותר.</p><div id="g1"></div><p class="note">העקומות הן הדמיה שמבוססת על נתוני Bambu Lab (גיליונות נתונים טכניים, ISO 527). ערכים עם * משוערים.</p></div></details></div>${band()}`};
+pages['sla-materials']={t:'סוגי שרף',h:()=>`<div class="wrap page c-sla"><div class="rv"><div class="crumb"><a href="#sla">SLA – הדפסה בשרף</a></div><h1>סוגי שרף</h1><p class="lead">לכל שרף תכונות אחרות – ממראה וגימור ועד חוזק, גמישות ועמידות לחום.</p></div>
+<div class="mats" style="margin-top:28px">${SLAM.map((m,i)=>`<article class="mat rv c-${['sla','sls','fdm','grn','ac','pnk','yel','fdm','sla'][i]}"><h3>${m[0]}</h3><div class="nick">${m[1]}</div><p>${m[2]}</p><p><b>מתאים ל:</b> ${m[3]}</p></article>`).join('')}</div>
+<p class="note">השרפים הזמינים משתנים – לבירור במייל.</p>
+<h2 class="rv" style="margin-top:56px">עמידות לכימיקלים</h2><p class="rv" style="color:var(--mut)">בחירת החומר שהחלק ייגע בו מציגה אילו שרפים עמידים לו. הבדיקה של Formlabs: קובייה מודפסת שהושרתה בחומר 24 שעות; עלייה במשקל של פחות מ־1% נחשבת עמידה.</p>
+<div class="box rv" id="g3"></div>
+<details class="rv"><summary>למתקדמים: השוואת חוזק בגרף מאמץ־מעוות</summary><div><p style="color:var(--mut)">כמה כוח השרף מחזיק (למעלה) וכמה הוא נמתח (ימינה) עד שבירה (העיגול).</p><div id="g2"></div><p class="note">הדמיה לפי נתוני Formlabs לחלקים שעברו הקשיה סופית. ערכים עם * משוערים.</p></div></details>
+<p class="note">מקור: Formlabs – <a href="https://formlabs.com/support/solvent-compatibility/" target="_blank" rel="noopener">Solvent compatibility</a> וגיליונות הנתונים. Formlabs לא מפרסמת נתוני עמידות כימית לשרפים רפואיים.</p></div>${band()}`};
+pages['sls-materials']={t:'Nylon 12',h:()=>`<div class="wrap page c-sls"><div class="rv"><div class="crumb"><a href="#sls">SLS – הדפסה באבקת ניילון</a></div><h1>החומר: Nylon 12</h1><p class="lead">הדפסות ה־SLS במעבדה מתבצעות ב־Nylon 12 – ניילון חזק ועמיד, עם עמידות טובה מאוד לרוב הכימיקלים.</p></div>
+<div class="mats" style="margin-top:28px">${SLSM.map((m,i)=>`<article class="mat rv c-${['sls','ac','grn','sla'][i]}"><h3>${m[0]}</h3><div class="nick">${m[1]}</div><p>${m[2]}</p><p><b>מתאים ל:</b> ${m[3]}</p></article>`).join('')}</div>
+<h2 class="rv" style="margin-top:56px">עמידות לכימיקלים</h2><div class="box rv" id="g4"></div><p class="note">מקור: Formlabs – Solvent compatibility. </p></div>${band()}`};
+/* ---------- students ---------- */
+const SEC=(id,n,c,title,body)=>`<section class="gs c-${c}" id="${id}"><div class="wrap"><h2 class="rv"><span class="num">${n}</span>${title}</h2>${body}</div></section>`;
+const RULES=[['עובי דופן מינימלי','0.8 מ״מ','מומלץ 1.2–2 מ״מ, ולחלק שנושא עומס – יותר. דופן דקה מ־0.8 מ״מ לא תודפס כראוי.'],
+['פין או פרט בולט','קוטר 2 מ״מ ומעלה','פינים אנכיים דקים נשברים בקלות בין השכבות. מתחת ל־3 מ״מ – כדאי להעבות את השורש או להשכיב את החלק.'],
+['חור אנכי','להגדיל ב־0.1–0.2 מ״מ','במדפסת תלת־ממד רגילה חורים יוצאים מעט קטנים מהמתוכנן. לחור מדויק – מתכננים קטן מעט וקודחים למידה.'],
+['מרווח – לחיצה (Press fit)','0–0.1 מ״מ לצד','תלוי חומר וגודל. בהתאמה קריטית – כדאי להדפיס קודם חלק בדיקה קטן.'],
+['מרווח – החלקה','0.2–0.3 מ״מ לצד','חלקים שנכנסים ויוצאים ביד.'],
+['מרווח – תנועה חופשית','0.4–0.5 מ״מ לצד','צירים ומנגנונים שמודפסים כבר מורכבים.'],
+['טקסט מובלט או חרוט','עומק וקו – 0.5 מ״מ לפחות','גובה אותיות 5 מ״מ ומעלה.'],
+['גישור (Bridge)','עד כ־10–20 מ״מ','קטע אופקי בין שתי נקודות תמיכה. ארוך יותר – המשטח התחתון ייראה פחות טוב.'],
+['זווית Overhang','עד 45° מהאנך','מעבר לזה – פאזה, שינוי כיוון החלק או תמיכה.'],
+['דיוק טיפוסי','0.1–0.2 מ״מ לכל כיוון','במדפסת תלת־ממד רגילה; תלוי בחומר ובגודל החלק.']];
+const CHK=['הקובץ נשמר ב־Save As כ־STEP AP214, במילימטרים','החלק נכנס בנפח 30.5 × 32 × 32.5 ס״מ – או מפוצל לחלקים','יש פאה שטוחה ויציבה להנחה על משטח ההדפסה','אין אזורים „מרחפים”; overhangs עד 45°, או פאזה לאורך כל הזיז (אם התכן מאפשר)','עובי דפנות 1.2 מ״מ ומעלה, ופינים בקוטר 2 מ״מ ומעלה','מרווחים בין חלקים נעים (0.2–0.5 מ״מ לצד)','העומס העיקרי פועל לאורך השכבות','אם יש אינסרטים – התייעצתי במייל לפני התכנון','בפנייה הראשונה צירפתי הסבר קצר על הפרויקט, השימוש בחלק והדרישות'];
+pages.students={t:'סטודנטים – מדריך תכנון להדפסת FDM',h:()=>`
+<div class="stu-hero c-fdm"><div class="wrap"><div class="rv"><div class="kick" style="color:var(--fdm)">לסטודנטים בפרויקטים של פרופ׳ אמיר שפירא</div><h1>מדריך תכנון להדפסת FDM</h1><p class="lead">רוב החלקים בפרויקטים מודפסים ב־<b>Bambu Lab H2C</b>. הסטודנט מתכנן ושולח קובץ במייל – וההדפסה מתבצעת במעבדה. המדריך מסביר איך לתכנן חלק שיודפס טוב וחזק, עם כמה שפחות תמיכות.</p></div>
+<div class="toc rv">${[['s-flow','איך שולחים'],['s-quiz','שאלון בחירת חומר'],['s-h2c','צבעים וחומרים משולבים'],['s-fdm','איך FDM עובד'],['s-sup','תמיכות וזיזים'],['s-rules','כללי תכנון'],['s-ins','אינסרטים'],['s-orient','כיוון ההדפסה'],['s-chk','צ׳קליסט']].map(t=>`<button data-go="${t[0]}">${t[1]}</button>`).join('')}</div></div></div>
+${SEC('s-flow',1,'fdm','איך שולחים קובץ',`<ol class="steps">${[['מתכננים ב־CAD','SolidWorks, Fusion, Onshape או כל תוכנה אחרת – לפי המדריך שבעמוד הזה.'],['שומרים כ־STEP AP214','בתוכנת ה־CAD: File ← Save As ← בוחרים STEP AP214 (‎.step / .stp).'],['שולחים במייל','לכתובת '+EMAIL+', עם הקובץ מצורף. כל המידות נלקחות מהקובץ.'],['הדפסה ואיסוף','החלק מודפס במעבדה, ובסיום מתאמים איסוף.']].map((s,i)=>`<li class="rv c-${['fdm','yel','grn','sls'][i]}"><h3>${s[0]}</h3><p>${s[1]}</p></li>`).join('')}</ol>
+<div class="tip2 rv"><b>במייל הראשון:</b> כמה משפטים על הפרויקט – מה החלק עושה, איפה הוא מותקן ומה הדרישות ממנו (עומס, טמפרטורה, גמישות, מראה). כך אפשר לייעץ בבחירת החומר ובתכנון.</div>
+<form class="rv box" id="sf" novalidate style="margin-top:22px"><h3 style="margin-top:0">טופס מייל מוכן</h3><p style="color:var(--mut);margin:0;font-size:.95rem">פותח את המייל עם הפרטים – נשאר לצרף את קובץ ה־STEP ולשלוח.</p>
+<div class="cols" style="gap:0 24px"><div><label for="s-n">שם מלא</label><input id="s-n" autocomplete="name"></div><div><label for="s-p">שם הפרויקט</label><input id="s-p"></div>
+<div><label for="s-m">חומר</label><select id="s-m"><option>לא בטוח/ה – אשמח להמלצה</option>${FT.filter(r=>r[0]!=='תמיכה').map(r=>`<option>${r[1]}</option>`).join('')}</select></div><div><label for="s-q">כמות</label><input id="s-q" inputmode="numeric" value="1"></div></div>
+<label for="s-d">פעם ראשונה? הסבר קצר על הפרויקט, השימוש בחלק והדרישות</label><textarea id="s-d" rows="4" placeholder="למשל: זרוע לרובוט שמרים עד 0.5 ק״ג; עובד בטמפרטורת החדר; צריך להיות קשיח"></textarea>
+<div class="btns"><button class="btn" type="submit" style="background:var(--fdm);border-color:var(--fdm)">פתיחת המייל לשליחה</button></div></form>`)}
+${SEC('s-quiz',2,'pnk','שאלון בחירת חומר',`<p class="rv">חמש שאלות על השימוש בחלק – ומתקבלת המלצה על חומרים, עם הנתונים שלהם. לחישובים ולהשוואה מלאה יש באתר <a href="#fdm-materials">טבלה של כל החומרים</a> עם מודול יאנג, חוזק מתיחה, Tg ו־HDT – מומלץ להשתמש בה לפי הצורך.</p><div class="box rv" id="quiz"></div>
+<div class="cols rv" style="margin-top:22px"><div><h3 style="margin-top:0">Tg ו־HDT בקצרה</h3><p><b>Tg</b> – הטמפרטורה שבה החומר מתחיל להתרכך. <b>HDT</b> – הטמפרטורה שבה מוט סטנדרטי מתכופף תחת עומס קל. לבחירת חומר לפי טמפרטורת עבודה, HDT הוא הנתון השימושי יותר.</p></div><div><h3 style="margin-top:0">למה ל־PA6‑CF יש Tg של 68°C אבל HDT של 186°C?</h3><p>בחומרים חצי־גבישיים ומחוזקי סיבים, האזורים הגבישיים והסיבים ממשיכים לשאת עומס גם מעל ה־Tg. בחומרים אמורפיים (PLA, PETG, PC) שני הערכים קרובים.</p></div></div>`)}
+${SEC('s-h2c',3,'sls','H2C: כמה צבעים וחומרים באותו חלק',`<div class="cols"><div class="rv"><p>ב־H2C אפשר להדפיס <b>כמה צבעים</b> באותו חלק – לסימון, להבחנה בין חלקים או למראה.</p><p>היתרון הגדול לתכנון: <b>שילוב חומר קשיח וחומר גמיש באותו חלק</b>, בהדפסה אחת ובלי הרכבה. לדוגמה, קורה עם שני קצוות קשיחים ממקטע TPU גמיש באמצע – הקורה מתכופפת רק באזור הגמיש, כמו ציר.</p><p>עוד דוגמאות: ידית עם אחיזה רכה, רגליות מונעות החלקה, אטם מובנה במכסה, בולם זעזועים בתוך תושבת.</p><p>התא הסגור והמחומם של המדפסת מאפשר להדפיס גם חומרים הנדסיים, כמו פוליקרבונט וניילון מחוזק.</p><div class="tip2"><b>איך מתכננים חלק משולב?</b> מתכננים כל חומר כגוף (Body) נפרד באותו קובץ, ומציינים במייל איזה גוף מאיזה חומר. כדאי לתכנן שטח מגע גדול בין שני החומרים – למשל חפיפה או שיניים – כי החיבור ביניהם הוא נקודת החולשה.</div></div><figure class="fig rv" style="display:block;margin:0"><figure>${DG.flex}<figcaption><b>קורה משולבת.</b> PETG קשיח בקצוות ו־TPU גמיש באמצע – מודפסת כיחידה אחת.</figcaption></figure></figure></div>
+<div class="kv rv"><div><b>30.5 × 32 × 32.5 ס״מ</b><span>גודל מרבי של חלק</span></div><div><b>חלקים ארוכים יותר</b><span>במדפסת המסוע CR‑30</span></div><div><b>תמיכה מסיסה</b><span>ב־METHOD X</span></div></div>`)}
+${SEC('s-fdm',4,'yel','איך FDM עובד',`<div class="cols"><div class="rv"><p>במדפסת תלת־ממד רגילה, חוט פלסטיק מותך ונדחף דרך נחיר, ומונח בקווים לפי מסלול. כל שכבה נבנית מעל הקודמת. החלק בנוי מ:</p><ul><li><b>דפנות</b> – הקווים שמקיפים כל שכבה. הן נותנות את רוב החוזק.</li><li><b>שכבות עליונות ותחתונות</b> – „עור” מלא למעלה ולמטה.</li><li><b>מילוי</b> – מבנה פנימי חלקי. ההגדרה נקבעת בהכנה להדפסה, לפי השימוש בחלק.</li></ul></div>
+<div class="rv"><h3 style="margin-top:0">שלושה דברים לזכור בתכנון</h3><ol><li><b>כל שכבה צריכה משהו מתחתיה.</b> אי אפשר להדפיס באוויר.</li><li><b>החומר אנאיזוטרופי</b> – התכונות לאורך השכבות שונות מהתכונות בין השכבות.</li><li><b>חורים ומידות</b> יוצאים מעט שונים מהתכנון – ראו טבלת כללי התכנון.</li></ol></div></div>`)}
+${SEC('s-sup',5,'fdm','תמיכות, overhangs וזיזים',`<div class="rv"><p>במדפסת תלת־ממד רגילה, כל שכבה חייבת לשבת על השכבה שמתחתיה. שכבה שזזה קצת הצידה עדיין נשענת על הקודמת – אבל מעבר לזווית מסוימת היא נופלת. <b>כלל האצבע: עד 45° מהאנך – בלי תמיכה.</b> מעבר לזה צריך תמיכה: מבנה זמני שמודפס מתחת לחלק ומוסר בסוף. תמיכות מוסיפות זמן וחומר ומשאירות סימנים על המשטח.</p></div>
+<div class="fig rv"><figure>${DG.angle}<figcaption><b>זווית Overhang.</b> עד 45° כל שכבה נשענת מספיק על הקודמת. מעבר לזה – השכבה תלויה באוויר.</figcaption></figure><figure>${DG.island}<figcaption><b>אין אזורים מרחפים.</b> חלק שמתחיל באמצע האוויר יודפס על כלום ויקרוס. צריך לחבר אותו בשיפוע – או להוסיף תמיכה.</figcaption></figure></div>
+<h3 class="rv">זיז שיוצא מעמוד: פאזה של 45°</h3><p class="rv">זיז אופקי שיוצא מעמוד מתחיל באוויר, ולכן צריך תמיכה מתחתיו. <b>אם התכן מאפשר, אפשר להוסיף מתחת לזיז פאזה של 45°.</b> אם מוסיפים פאזה – היא צריכה להיות <b>לאורך כל הזיז, עד הקצה שלו</b>. כך כל שכבה נבנית מעט הלאה מהקודמת, והזיז מודפס בלי תמיכה בכלל. בונוס: הפאזה גם מחזקת את השורש של הזיז.</p>
+<div class="fig rv"><figure>${DG.tab}<figcaption><b>זיז מעמוד.</b> מימין: בלי פאזה – צריך תמיכה מלאה. משמאל: פאזה של 45° לאורך כל הזיז – אין צורך בתמיכה.</figcaption></figure><figure>${DG.edge}<figcaption><b>קצוות תחתונים.</b> רדיוס בתחתית החלק מתחיל כמעט אופקי, ולכן הוא overhang. פאזה של 45° מודפסת נקי. רדיוסים בקצוות העליונים והאנכיים – בלי בעיה.</figcaption></figure></div>
+<div class="cols rv"><div><h3>חורים אופקיים</h3><p>רק בחורים קטנים מאוד (עד כ־2 מ״מ) כדאי לשקול צורת „טיפה” – חור עם קצה עליון מחודד ב־45°. בחורים גדולים יותר אין צורך.</p></div><div><h3>כשאין ברירה – תמיכה</h3><p>ב־H2C אפשר להדפיס את שכבת המגע של התמיכה מחומר אחר, שנפרד בקלות ומשאיר משטח נקי יחסית.</p></div></div>`)}
+${SEC('s-rules',6,'grn','כללי תכנון – טבלת עזר',`<p class="rv">ערכים טיפוסיים במדפסת תלת־ממד רגילה. בהתאמה קריטית – כדאי להדפיס קודם חלק בדיקה קטן.</p><div class="sc rv"><table class="rules"><thead><tr><th>נושא</th><th>ערך מומלץ</th><th>הערות</th></tr></thead><tbody>${RULES.map(r=>`<tr><td>${r[0]}</td><td style="white-space:nowrap">${r[1]}</td><td>${r[2]}</td></tr>`).join('')}</tbody></table></div>
+<div class="cols" style="margin-top:28px"><div class="rv"><h3>חלקים גדולים ושטוחים</h3><p>במדפסת תלת־ממד רגילה, חומרים כמו ABS, ASA, PC וניילון מתכווצים בקירור, ומשטחים גדולים ושטוחים עלולים להתעקם בפינות. עוזר לתכנן פינות מעוגלות (במבט מלמעלה), צלעות במקום לוח עבה ועובי אחיד ככל האפשר.</p></div>
+<div class="rv"><h3>חלק גדול מהמדפסת</h3><p>מפצלים לכמה חלקים ומחברים: פינים מיישרים, זנב יונה, ברגים או הדבקה. כדאי שקו החיבור יעבור באזור עם עומס נמוך.</p></div>
+<div class="rv"><h3>קליפסים וזרועות קפיציות</h3><p>לתכנן כך שהזרוע מודפסת לאורך השכבות, ומחומר קשוח כמו PETG, PC או ניילון. PLA נוטה להישבר בכיפוף חוזר.</p></div>
+<div class="rv"><h3>תכונות החומר לחישובים</h3><p>לחישובי קשיחות וחוזק – <a href="#fdm-materials">טבלת החומרים</a> כוללת מודול יאנג, חוזק מתיחה, Tg ו־HDT מגיליונות היצרן. הערכים נמדדים על דגימות סטנדרטיות, ולכן מומלץ לתכנן עם מקדם ביטחון.</p></div></div>`)}
+${SEC('s-ins',7,'yel','אינסרטים מפליז',`<div class="cols"><div class="rv"><p>כשבורג מוברג ישירות לפלסטיק, התבריג נשחק אחרי כמה פעמים. בחלקים שצריך להבריג ולפרק שוב ושוב, או שנושאים עומס על הבורג, משתמשים ב<b>אינסרטים מפליז</b> (Heat‑set inserts): תותבים עם תבריג פנימי, שמוחדרים לחור בעזרת חום ונאחזים היטב בפלסטיק.</p><ul><li>ניתן להביא אינסרטים מפליז במידות המתאימות.</li><li><b>במקרה של שימוש באינסרטים – יש להתייעץ במייל לפני התכנון</b>, כדי שקוטר ועומק החור יתאימו לאינסרט.</li></ul></div><figure class="fig rv" style="display:block;margin:0"><figure>${DG.insert}<figcaption><b>אינסרט פליז</b> מוחדר בחום לחור בחלק, ונותן תבריג מתכתי עמיד.</figcaption></figure></figure></div>`)}
+${SEC('s-orient',8,'sla','כיוון ההדפסה: חומר אנאיזוטרופי',`<div class="cols"><div class="rv"><p>חלק מודפס הוא <b>חומר אנאיזוטרופי</b>: התכונות שלו תלויות בכיוון. לאורך השכבות הוא חזק יותר מאשר בין השכבות. ב־<b>PET‑CF</b>, לדוגמה, חוזק המתיחה הוא 74 MPa לאורך השכבות ו־35 MPa בין השכבות; ב־<b>PAHT‑CF</b> – 88 מול 64 MPa (גיליונות Bambu Lab).</p><ul><li>כדאי לתכנן כך ש<b>המאמץ העיקרי פועל לאורך השכבות</b>.</li><li>ווים, קליפסים וזרועות – עדיף שישכבו על המשטח ולא יעמדו.</li><li>חורים לברגים – עדיף אנכיים: הם יוצאים עגולים ומדויקים יותר.</li></ul><p>כיוון ההדפסה נבחר בהכנה לפי הגיאומטריה. אם יש העדפה – אפשר לציין אותה במייל.</p></div><figure class="fig rv" style="display:block;margin:0"><figure>${DG.aniso}<figcaption><b>אנאיזוטרופיה.</b> משיכה לאורך השכבות – חזק. משיכה שמפרידה בין השכבות – חלש יותר.</figcaption></figure></figure></div>`)}
+${SEC('s-chk',9,'grn','צ׳קליסט לפני שליחה',`<ul class="chk rv">${CHK.map((c,i)=>`<li><label><input type="checkbox" id="ck${i}"> <span>${c}</span></label></li>`).join('')}</ul><p class="rv" id="ckp" style="color:var(--mut)"></p>`)}
+${band()}`};
+/* ---------- nav ---------- */
+const NAV=Object.entries(T).map(([t,x])=>`<li class="it"><button class="top" aria-expanded="false">${x.n} <small>${x.p.replace('הדפסה ב','')}</small></button><div class="dd"><a href="#${t}">מה זה ${x.n}?<span class="hint">${x.p} – בשפה פשוטה</span></a><div class="has"><a href="#${t}">המדפסות במעבדה</a><div class="sub">${PR.filter(k=>P[k].t===t).map(k=>`<a href="#${k}">${P[k].n}</a>`).join('')}</div></div><a href="#${t}-materials">${x.mt}</a></div></li>`).join('')
++`<li class="it"><a class="top" href="#scan">סריקה בתלת־ממד</a></li><li class="it"><a class="top" href="#laser">חיתוך לייזר</a></li><li class="it"><a class="top stu" href="#students">סטודנטים</a></li><li class="it"><a class="top cta" href="#contact">יצירת קשר</a></li>`;
+const hd=document.getElementById('hd'),nav=document.getElementById('nav');nav.innerHTML=NAV;
+const closeAll=except=>nav.querySelectorAll('.it.open').forEach(i=>{if(i!==except){i.classList.remove('open');i.querySelector('.top').setAttribute('aria-expanded','false')}});
+nav.querySelectorAll('button.top').forEach(b=>b.onclick=()=>{const it=b.parentElement;const o=!it.classList.contains('open');closeAll(it);it.classList.toggle('open',o);b.setAttribute('aria-expanded',o)});
+document.addEventListener('click',e=>{if(!nav.contains(e.target))closeAll()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll()});
+/* ---------- router ---------- */
+const m=document.getElementById('m');let first=true;
+function render(){
+ const id=location.hash.slice(1)||'home';if(id==='m')return;
+ const pg=pages[id]||pages.home;m.innerHTML=pg.h();document.title=pg.t+' | מעבדת תלת־ממד BGU';
+ closeAll();nav.querySelectorAll('.top').forEach(a=>a.removeAttribute('aria-current'));const cur=nav.querySelector(`a.top[href="#${id}"]`);if(cur)cur.setAttribute('aria-current','page');
+ scrollTo(0,0);if(!first)m.focus({preventScroll:true});first=false;
+ const g=n=>document.getElementById(n);
+ if(g('mf'))matFilter(g('mf'));if(g('ft'))fullTable(g('ft'));if(g('quiz'))quiz(g('quiz'));
+ if(g('g1'))stress(g('g1'),FDMS,true);if(g('g2'))stress(g('g2'),RES,false);if(g('g3'))chem(g('g3'),'sla');if(g('g4'))chem(g('g4'),'sls');
+ m.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const t=g(b.dataset.go);if(t){t.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});const h=t.querySelector('h2');if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true})}}});
+ if(g('ck0')){const cks=[...m.querySelectorAll('.chk input')];const up=()=>{const n=cks.filter(c=>c.checked).length;g('ckp').textContent=n===cks.length?'✓ הכל מסומן – אפשר לשלוח':`סומנו ${n} מתוך ${cks.length}`};cks.forEach(c=>c.onchange=up);up()}
+ if(g('sf')){g('sf').onsubmit=e=>{e.preventDefault();const v=id=>g(id).value.trim();const sub=`הדפסה לפרויקט ${v('s-p')} – ${v('s-n')}`;const body=`שם: ${v('s-n')}\nפרויקט: ${v('s-p')} (פרופ׳ אמיר שפירא)\nחומר: ${v('s-m')}\nכמות: ${v('s-q')}\n\n${v('s-d')?'על הפרויקט והחלק:\n'+v('s-d')+'\n\n':''}מצורף קובץ STEP.\n`;location.href=`mailto:${EMAIL}?subject=${encodeURIComponent(sub)}&body=${encodeURIComponent(body)}`}}
+ if(g('cf')){g('cf').onsubmit=e=>{e.preventDefault();const n=g('f-n').value.trim(),s=g('f-s').value,msg=g('f-m').value.trim();location.href=`mailto:${EMAIL}?subject=${encodeURIComponent('פנייה למעבדת תלת־ממד – '+s)}&body=${encodeURIComponent(`שם: ${n}\nשירות: ${s}\n\n${msg}\n`)}`};
+  g('cp').onclick=async()=>{try{await navigator.clipboard.writeText(EMAIL);g('cp').textContent='הועתק ✓'}catch(_){g('cp').textContent=EMAIL}}}
+ if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.06,rootMargin:'0px 0px -30px 0px'});m.querySelectorAll('.rv').forEach(e=>io.observe(e))}else m.querySelectorAll('.rv').forEach(e=>e.classList.add('in'));
+}
+const FDMS=[['PLA',{E:2600,su:39,eb:12.2,est:1},{E:2400,su:35,eb:7.5,est:1}],['PLA‑CF',{E:3500,su:38,eb:8.4,est:1},{E:2160,su:26,eb:3.6}],['PETG‑CF',{E:3000,su:59,eb:10.4,est:1},{E:1800,su:38,eb:4.7,est:1}],['PET‑CF',{E:4730,su:74,eb:4.5},{E:2160,su:35,eb:2.4}],['PAHT‑CF',{E:3860,su:88,eb:10.4},{E:2180,su:64,eb:5.2}]].map(r=>({n:r[0],get:o=>o==='xy'?r[1]:r[2]}));
+const RES=[['Standard',2800,65,6,0],['Tough 2000',2200,46,48,0],['Tough 1500',1500,33,51,0],['Durable',1260,31.8,49,0],['Rigid 4000',4100,69,5.3,1],['Rigid 10K',10000,65,1,1]].map(r=>({n:r[0],E:r[1],su:r[2],eb:r[3],est:r[4],k:r[3]<3?6:r[3]<10?4:3}));
+addEventListener('hashchange',render);render();
+</script>
+</body>
+</html>

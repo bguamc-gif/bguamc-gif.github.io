@@ -15,3 +15,5 @@
   (the script also recomputes that page's CSP hashes). Ask the owner for the plaintext HTML and the password.
 - NEVER commit the plaintext tool or the password.
 - The page backs up its data to a separate PRIVATE repo via the GitHub API (token kept only in the browser); CSP allows connect-src https://api.github.com only.
+- `tools/quotes_salt.b64` keeps the PBKDF2 salt between builds (not secret) so the browser's "remember me" key survives updates. Don't delete it.
+- The tool has a version lock (`APP_VER`, set at build time): an open tab running an older build refuses to save and asks to refresh. Always build with a new APP_VER.

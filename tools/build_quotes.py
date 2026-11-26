@@ -45,7 +45,7 @@ LOADER = r"""
       .then(function(k){ return crypto.subtle.decrypt({name:'AES-GCM', iv:b64(d.iv)}, k, b64(d.ct)); })
       .then(function(pt){ return new TextDecoder().decode(pt); });
   }
-  function show(html){ window.__encrypted = true; document.open(); document.write(html); document.close(); }
+  function show(html){ window.__encrypted = true; document.querySelectorAll('style').forEach(function(x){ x.remove(); }); document.open(); document.write(html); document.close(); }
   var f = document.getElementById('f'), err = document.getElementById('err'), btn = document.getElementById('go');
   try {
     var saved = JSON.parse(localStorage.getItem(KEY) || 'null');
@@ -78,16 +78,16 @@ page = f"""<!DOCTYPE html>
 <meta name="referrer" content="no-referrer">
 <title>כניסה</title>
 <style>
-body{{margin:0;min-height:100vh;display:grid;place-items:center;background:#14213d;font-family:"Segoe UI",Arial,sans-serif}}
-form{{background:#fff;border-radius:12px;padding:28px 30px;width:min(340px,90vw);box-shadow:0 10px 40px rgba(0,0,0,.3)}}
-h1{{font-size:18px;margin:0 0 16px;color:#14213d}}
-input[type=password]{{width:100%;box-sizing:border-box;font:inherit;padding:10px;border:1px solid #cdd2da;border-radius:7px;direction:ltr}}
-label{{display:flex;gap:6px;align-items:center;font-size:13px;color:#555;margin:12px 0}}
-button{{width:100%;font:inherit;font-weight:600;padding:10px;border:0;border-radius:7px;background:#1f5fbf;color:#fff;cursor:pointer}}
+body.lk{{margin:0;min-height:100vh;display:grid;place-items:center;background:#14213d;font-family:"Segoe UI",Arial,sans-serif}}
+#f{{background:#fff;border-radius:12px;padding:28px 30px;width:min(340px,90vw);box-shadow:0 10px 40px rgba(0,0,0,.3)}}
+#f h1{{font-size:18px;margin:0 0 16px;color:#14213d}}
+#f input[type=password]{{width:100%;box-sizing:border-box;font:inherit;padding:10px;border:1px solid #cdd2da;border-radius:7px;direction:ltr}}
+#f label{{display:flex;gap:6px;align-items:center;font-size:13px;color:#555;margin:12px 0}}
+#f button{{width:100%;font:inherit;font-weight:600;padding:10px;border:0;border-radius:7px;background:#1f5fbf;color:#fff;cursor:pointer}}
 #err{{color:#b42318;font-size:13px;min-height:18px;margin:10px 0 0}}
 </style>
 </head>
-<body>
+<body class="lk">
 <form id="f" hidden autocomplete="on">
   <h1>כניסה לכלי הפנימי</h1>
   <input type="text" name="username" value="bgu-quotes" autocomplete="username" hidden>

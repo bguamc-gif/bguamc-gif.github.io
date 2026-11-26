@@ -60,7 +60,7 @@ LOADER = r"""
 
 tool_scripts = re.findall(r'<script>(.*?)</script>', src, re.S)
 csp = ("default-src 'none'; script-src " + ' '.join(sha(x) for x in [LOADER] + tool_scripts) +
-       "; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; base-uri 'none'; "
+       "; style-src 'unsafe-inline'; img-src data: blob:; connect-src https://api.github.com; base-uri 'none'; "
        "form-action 'none'; object-src 'none'; manifest-src 'none'; upgrade-insecure-requests")
 
 page = f"""<!DOCTYPE html>

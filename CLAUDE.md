@@ -14,3 +14,4 @@
 - Rebuild after changing the tool:  `QUOTES_PASSWORD='…' python3 tools/build_quotes.py /path/to/plaintext-tool.html`
   (the script also recomputes that page's CSP hashes). Ask the owner for the plaintext HTML and the password.
 - NEVER commit the plaintext tool or the password.
+- The page backs up its data to a separate PRIVATE repo via the GitHub API (token kept only in the browser); CSP allows connect-src https://api.github.com only.

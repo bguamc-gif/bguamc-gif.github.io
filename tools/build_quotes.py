@@ -17,7 +17,12 @@ pw = os.environ.get('QUOTES_PASSWORD')
 if not pw:
     sys.exit('set QUOTES_PASSWORD')
 
-salt, iv = secrets.token_bytes(16), secrets.token_bytes(12)
+# the salt is kept between builds (it is not secret) so "remember me" keeps working after updates
+salt_file = root / 'tools' / 'quotes_salt.b64'
+if salt_file.exists(): salt = base64.b64decode(salt_file.read_text().strip())
+else:
+    salt = secrets.token_bytes(16); salt_file.write_text(base64.b64encode(salt).decode())
+iv = secrets.token_bytes(12)
 key = hashlib.pbkdf2_hmac('sha256', pw.encode('utf-8'), salt, ITER, 32)
 ct = AESGCM(key).encrypt(iv, src.encode('utf-8'), None)
 b64 = lambda b: base64.b64encode(b).decode()
